@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <!-- to customize size of column use this property with preferred number. e.g. type="${stringType}(200)" -->
+    <property dbms="postgresql" name="stringType" value="VARCHAR"/>
+    <property dbms="postgresql" name="stringType40" value="VARCHAR(40)"/>
+    <property dbms="postgresql" name="stringType255" value="VARCHAR(255)"/>
+    <property dbms="postgresql" name="dateType" value="DATETIME"/>
+    <property dbms="postgresql" name="doubleType" value="DOUBLE"/>
+    <property dbms="postgresql" name="booleanType" value="BOOLEAN"/>
+    <property dbms="postgresql" name="shortType" value="INT2"/>
+    <property dbms="postgresql" name="integerType" value="INT4"/>
+    <property dbms="postgresql" name="longType" value="INT8"/>
+    <property dbms="postgresql" name="bigDecimalType" value="NUMERIC"/>
+    <property dbms="postgresql" name="blobType" value="BLOB"/>
+    <property dbms="postgresql" name="floatType" value="float4"/>
+    <property dbms="postgresql" name="charType" value="char(1)"/>
+    <property dbms="postgresql" name="clobType" value="text"/>
+    <property dbms="postgresql" name="jsonType" value="json"/>
+    <property dbms="postgresql" name="jsonBinaryType" value="jsonb"/>
+
+</databaseChangeLog>

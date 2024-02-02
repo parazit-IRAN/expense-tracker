@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <!-- to customize size of column use this property with preferred number. e.g. type="${stringType}(200)" -->
+    <property dbms="h2" name="bigIntegerType" value="decimal(19,2)"/>
+    <property dbms="h2" name="booleanType" value="boolean"/>
+    <property dbms="h2" name="charType" value="char(255)"/>
+    <property dbms="h2" name="dateType" value="timestamp"/>
+    <property dbms="h2" name="floatType" value="float"/>
+    <property dbms="h2" name="doubleType" value="double"/>
+    <property dbms="h2" name="integerType" value="integer"/>
+    <property dbms="h2" name="longType" value="bigint"/>
+    <property dbms="h2" name="shortType" value="SMALLINT"/>
+    <property dbms="h2" name="stringType" value="varchar"/>
+    <property dbms="h2" name="stringType40" value="varchar(40)"/>
+    <property dbms="h2" name="stringType255" value="varchar(255)"/>
+    <property dbms="h2" name="clobType" value="clob"/>
+    <property dbms="h2" name="blobType" value="blob"/>
+    <property dbms="h2" name="bigDecimalType" value="decimal(19,2)"/>
+    <property dbms="h2" name="jsonType" value="json"/>
+    <property dbms="h2" name="jsonBinaryType" value="BINARY(10000)"/>
+
+</databaseChangeLog>
+

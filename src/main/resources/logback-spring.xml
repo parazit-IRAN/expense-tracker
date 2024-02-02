@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <springProperty scope="context" name="log-directory" source="logs.directory"/>
+    <springProperty scope="context" name="log-file-size" source="logs.regular.max.file.size" defaultValue="200MB"/>
+    <!-- never ever remove defaultValue because it causes problem because of zuul dependency the json-file-size value could not be read in that case-->
+    <springProperty scope="context" name="max-file-size" source="logs.size-based-triggering-policy.max.file.size"
+                    defaultValue="90MB"/>
+    <springProperty scope="context" name="masking-enabled" source="logging.masking.enabled"/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d{HH:mm:ss.SSS} [%20(%thread)] %-5level %40.40logger{40} [%12(%X{traceId}), %12(%X{spanId}), %-11(%X{orderId})] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="JsonFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log-directory}/expense-tracker.json</file>
+        <layout class="ir.snapp.pay.configuration.logback.MaskingPatternJsonLayout">
+            <maskingEnabled>${masking-enabled}</maskingEnabled>
+            <jsonFormatter class="ch.qos.logback.contrib.jackson.JacksonJsonFormatter"></jsonFormatter>
+            <timestampFormat>yyyy-MM-dd' 'HH:mm:ss.SSS</timestampFormat>
+            <appendLineSeparator>true</appendLineSeparator>
+        </layout>
+        <rollingPolicy class="ir.snapp.pay.configuration.SizeBasedRollingPolicyWithoutArchive">
+            <fileNamePattern>${log-directory}/archived/expense-tracker.%i.json</fileNamePattern>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>${max-file-size}</maxFileSize>
+        </triggeringPolicy>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+    <root level="INFO">
+        <appender-ref ref="JsonFile"/>
+    </root>
+    <logger name="ir.snapp.pay" level="INFO"/>
+
+</configuration>

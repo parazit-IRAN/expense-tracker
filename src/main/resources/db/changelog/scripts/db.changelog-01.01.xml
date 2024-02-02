@@ -9,4 +9,81 @@
         <createSequence sequenceName="sequence_generator" startValue="1" incrementBy="50"/>
     </changeSet>
 
+    <changeSet id="00000000000001" author="kamali">
+        <createTable tableName="my_user">
+            <column name="id" type="${longType}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="login" type="${stringType}(50)">
+                <constraints unique="true" nullable="false" uniqueConstraintName="user_login"/>
+            </column>
+            <column name="password_hash" type="${stringType}(60)"/>
+            <column name="first_name" type="${stringType}(50)"/>
+            <column name="last_name" type="${stringType}(50)"/>
+            <column name="email" type="${stringType}(191)">
+                <constraints unique="true" nullable="true" uniqueConstraintName="user_email"/>
+            </column>
+            <column name="created_by" type="${stringType}(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="${dateType}"/>
+            <column name="last_modified_by" type="${stringType}(50)"/>
+            <column name="last_modified_date" type="${dateType}"/>
+        </createTable>
+
+        <createTable tableName="authority">
+            <column name="name" type="${stringType}(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="user_authority">
+            <column name="user_id" type="${longType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="authority_name" type="${stringType}(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="user_id, authority_name" tableName="user_authority"/>
+
+        <addForeignKeyConstraint baseColumnNames="authority_name"
+                                 baseTableName="user_authority"
+                                 constraintName="fk_authority_name"
+                                 referencedColumnNames="name"
+                                 referencedTableName="authority"/>
+
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="user_authority"
+                                 constraintName="fk_user_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="my_user"/>
+
+        <addNotNullConstraint   columnName="password_hash"
+                                columnDataType="${stringType}(60)"
+                                tableName="my_user"/>
+        <loadData
+                file="db/changelog/data/authority.csv"
+                separator=";"
+                tableName="authority"
+                usePreparedStatements="true">
+            <column name="name" type="string"/>
+        </loadData>
+        <loadData
+                file="db/changelog/data/user.csv"
+                separator=";"
+                tableName="my_user"
+                usePreparedStatements="true">
+            <column name="id" type="numeric"/>
+        </loadData>
+        <loadData
+                file="db/changelog/data/user_authority.csv"
+                separator=";"
+                tableName="user_authority"
+                usePreparedStatements="true">
+            <column name="user_id" type="numeric"/>
+        </loadData>
+    </changeSet>
+
 </databaseChangeLog>

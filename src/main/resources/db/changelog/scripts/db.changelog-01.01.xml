@@ -14,14 +14,12 @@
             <column name="id" type="${longType}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="login" type="${stringType}(50)">
-                <constraints unique="true" nullable="false" uniqueConstraintName="user_login"/>
-            </column>
+            <column name="login" type="${stringType}(50)"/>
             <column name="password_hash" type="${stringType}(60)"/>
             <column name="first_name" type="${stringType}(50)"/>
             <column name="last_name" type="${stringType}(50)"/>
             <column name="email" type="${stringType}(191)">
-                <constraints unique="true" nullable="true" uniqueConstraintName="user_email"/>
+                <constraints unique="true" nullable="false" uniqueConstraintName="user_email"/>
             </column>
             <column name="created_by" type="${stringType}(50)">
                 <constraints nullable="false"/>

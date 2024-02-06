@@ -7,9 +7,11 @@ import ir.snapp.pay.dto.LoginDto;
 import ir.snapp.pay.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -17,12 +19,13 @@ import javax.validation.Valid;
 @Slf4j
 @RestController
 @AllArgsConstructor
+@RequestMapping("/authenticate")
 public class AuthenticateController extends BaseController {
 
 	private final JwtTokenUtil jwtTokenUtil;
 	private final UserService userService;
 
-	@PostMapping("/authenticate")
+	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> getToken(@Valid @RequestBody LoginDto loginDTO) {
 		try {
 			User user = userService.getUser(loginDTO.getEmail(), loginDTO.getPassword());

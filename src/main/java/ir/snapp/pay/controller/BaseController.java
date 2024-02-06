@@ -8,8 +8,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
-
 public class BaseController<T> {
 	protected static final Logger logger = LogManager.getLogger(BaseController.class);
 
@@ -25,7 +23,7 @@ public class BaseController<T> {
 			pe = new ExpenseException(ExpenseExceptionType.DEFAULT_EXCEPTION);
 		}
 		expenseRestResponse.setErrorCode(pe.getCode());
-		expenseRestResponse.setErrorMessage(List.of(pe.getMessage()));
+		expenseRestResponse.setErrorMessage(pe.getMessages());
 		return new ResponseEntity<>(expenseRestResponse, HttpStatus.UNPROCESSABLE_ENTITY);
 	}
 

@@ -16,12 +16,14 @@ public class MessageTranslatorUtil {
     }
 
     public static String getText(String msgCode) {
-        Locale locale = LocaleContextHolder.getLocale();
+//        Locale locale = LocaleContextHolder.getLocale();
+        Locale locale = new Locale("fa");
         return getText(msgCode, locale);
     }
 
     public static String getText(String msgCode, Object... params) {
-        Locale locale = LocaleContextHolder.getLocale();
+//        Locale locale = LocaleContextHolder.getLocale();
+        Locale locale = new Locale("fa");
         return getText(msgCode, locale, params);
     }
 

@@ -2,6 +2,7 @@ package ir.snapp.pay.domain;
 
 
 import lombok.Data;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,7 +15,7 @@ import java.io.Serializable;
 @Data
 @Entity
 @Table(name = "authority")
-public class Authority implements Serializable {
+public class Authority implements GrantedAuthority, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@NotNull
@@ -22,4 +23,9 @@ public class Authority implements Serializable {
 	@Id
 	@Column(name = "name", length = 50)
 	private String name;
+
+	@Override
+	public String getAuthority() {
+		return this.name;
+	}
 }

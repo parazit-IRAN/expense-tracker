@@ -2,6 +2,7 @@ package ir.snapp.pay.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -14,7 +15,8 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "my_user")
-public class User extends AbstractAuditingEntity<Long> implements Serializable {
+public class User extends AbstractAuditingEntity<Long> implements UserDetails, Serializable {
+
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -49,4 +51,28 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
 	)
 	private List<Authority> authorities = new ArrayList<>();
 
+	@Override
+	public String getUsername() {
+		return this.email;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
 }

@@ -3,23 +3,26 @@ package ir.snapp.pay.exception;
 
 import lombok.Data;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 @Data
 public class ExpenseException extends RuntimeException implements Supplier<ExpenseException> {
 	private int code;
-	private String message;
+	private List<String> messages;
 
 	@Override
 	public ExpenseException get() {
 		return this;
 	}
 
-	public ExpenseException(int code, String message) {
+	public ExpenseException() {
+	}
+	public ExpenseException(int code, List<String> messages) {
 		this.code = code;
-		this.message = message;
+		this.messages = messages;
 	}
 	public ExpenseException(ExpenseExceptionType expenseExceptionType){
-		this(expenseExceptionType.getErrorCode(), expenseExceptionType.getErrorMessage());
+		this(expenseExceptionType.getErrorCode(), List.of(expenseExceptionType.getErrorMessage()));
 	}
 }

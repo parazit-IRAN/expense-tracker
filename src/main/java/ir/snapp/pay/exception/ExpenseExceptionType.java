@@ -13,12 +13,18 @@ public enum ExpenseExceptionType {
 	DEFAULT_EXCEPTION(1, "exception.in.expense.api"),
 	USER_NOT_FOUND_EXCEPTION(2, "user.not.found"),
 	PASSWORD_IS_NOT_CORRECT_EXCEPTION(3, "password.is.not.correct"),
-	USER_EXISTS_EXCEPTION(4, "user.exists");
+	USER_EXISTS_EXCEPTION(4, "user.exists"),
+	TOKEN_EXPIRED_EXCEPTION(5, "token.expired"),
+	PERMISSION_DENIED_EXCEPTION(6, "permission.denied");
 
 	private int errorCode;
 	private String errorMessage;
 
 	public String getErrorMessage() {
 		return MessageTranslatorUtil.getText(errorMessage);
+	}
+
+	public String getErrorMessage(String val, String val2) {
+		return MessageTranslatorUtil.getText(errorMessage, val, val2);
 	}
 }

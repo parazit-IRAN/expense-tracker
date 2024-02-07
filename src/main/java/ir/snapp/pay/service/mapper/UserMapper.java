@@ -16,6 +16,7 @@ public class UserMapper {
 
 	public UserOutputDto userToUserOutputDto(User user) {
 		return UserOutputDto.builder()
+				.id(user.getId())
 				.firstName(user.getFirstName())
 				.lastName(user.getLastName())
 				.email(user.getEmail())

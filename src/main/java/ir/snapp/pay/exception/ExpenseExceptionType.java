@@ -16,7 +16,8 @@ public enum ExpenseExceptionType {
 	USER_EXISTS_EXCEPTION(4, "user.exists"),
 	TOKEN_EXPIRED_EXCEPTION(5, "token.expired"),
 	PERMISSION_DENIED_EXCEPTION(6, "permission.denied"),
-	TOKEN_IS_NOT_VALID_EXCEPTION(7, "token.is.not.valid");
+	TOKEN_IS_NOT_VALID_EXCEPTION(7, "token.is.not.valid"),
+	AUTHORITIES_NOT_FOUND_EXCEPTION(8, "authorities.not.found");
 
 	private int errorCode;
 	private String errorMessage;

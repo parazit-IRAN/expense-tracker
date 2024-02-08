@@ -54,4 +54,14 @@ public class GlobalExceptionHandler {
 		return expenseRestResponse;
 	}
 
+	@ExceptionHandler({ExpenseException.class})
+	@ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+	public ExpenseRestResponse handlingDbException(ExpenseException ex) {
+		log.error("custom exception thrown : {}", ex.getMessage(), ex);
+		ExpenseRestResponse<Object> expenseRestResponse = new ExpenseRestResponse<>();
+		expenseRestResponse.setErrorCode(ex.getCode());
+		expenseRestResponse.setErrorMessage(ex.getMessages());
+		return expenseRestResponse;
+	}
+
 }

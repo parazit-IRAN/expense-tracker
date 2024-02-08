@@ -1,9 +1,13 @@
 package ir.snapp.pay.util;
 
+import liquibase.repackaged.org.apache.commons.lang3.ArrayUtils;
 import lombok.experimental.UtilityClass;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 
+import java.awt.*;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Locale;
 
 @UtilityClass
@@ -44,6 +48,7 @@ public class MessageTranslatorUtil {
             System.arraycopy(filteredParams, 0, result, 0, filteredIndex);
             return result;
         }
+        ArrayUtils.reverse(filteredParams);
         return filteredParams;
     }
 }

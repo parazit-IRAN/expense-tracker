@@ -67,6 +67,10 @@ public class UserService {
 					.collect(Collectors.toList());
 			user.setAuthorities(authorities);
 		}
+
+		if (user.getAuthorities().isEmpty()) {
+			throw new ExpenseException(ExpenseExceptionType.AUTHORITIES_NOT_FOUND_EXCEPTION);
+		}
 		userRepository.save(user);
 		log.debug("Created an user: {}", user);
 		return userMapper.userToUserOutputDto(user);

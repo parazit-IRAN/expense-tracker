@@ -1,5 +1,6 @@
 package ir.snapp.pay.dto;
 
+import ir.snapp.pay.annotation.NoEmptyString;
 import lombok.Builder;
 import lombok.Data;
 
@@ -29,5 +30,6 @@ public class UserInputDto implements Serializable {
 	private String password;
 	@NotNull(message = "authorities.must.not.be.null")
 	@Size(min = 1, message = "authorities.size.must.be.greater.than.val")
+	@NoEmptyString(message = "authorities.must.not.be.empty")
 	private List<String> authorities;
 }

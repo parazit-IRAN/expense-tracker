@@ -48,9 +48,7 @@ public class JwtTokenUtil {
 
 	private static UsernamePasswordAuthenticationToken getUsernamePasswordAuthenticationToken(String token
 			, Claims claims, Collection<? extends GrantedAuthority> authorities) {
-		User principal = new User();
-		principal.setEmail(claims.getSubject());
-		return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+		return new UsernamePasswordAuthenticationToken(claims.getSubject(), token, authorities);
 	}
 
 	private Claims getClaims(String token) {

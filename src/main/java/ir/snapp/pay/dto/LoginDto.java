@@ -8,12 +8,12 @@ import javax.validation.constraints.Size;
 
 @Data
 public class LoginDto {
-	@NotNull
-	@Email
-	@Size(min = 5, max = 254)
+	@NotNull(message = "email.must.not.be.null")
+	@Email(message = "email.must.be.valid")
+	@Size(min = 5, max = 254, message = "email.size.must.be.between.val1.and.val2")
 	private String email;
 
-	@NotNull
-	@Size(min = 4, max = 100)
+	@NotNull(message = "password.must.not.be.null")
+	@Size(min = 8, max = 100, message = "password.size.must.be.between.val1.and.val2")
 	private String password;
 }

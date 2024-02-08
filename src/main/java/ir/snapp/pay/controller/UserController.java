@@ -27,15 +27,23 @@ public class UserController extends BaseController {
 	@PreAuthorize("hasAuthority(\"" + Constants.ADMIN + "\")")
 	public ResponseEntity<UserOutputDto> createUser(@Valid @RequestBody UserInputDto userInputDto) {
 		log.debug("REST request to save User : {}", userInputDto);
-		UserOutputDto userOutputDto = userService.createUser(userInputDto);
-		return success(userOutputDto);
+		try {
+			UserOutputDto userOutputDto = userService.createUser(userInputDto);
+			return success(userOutputDto);
+		} catch (Exception e) {
+			return failure(e);
+		}
 	}
 
-	@DeleteMapping(value = "/{email}")
-	@PreAuthorize("hasAuthority(\"" + Constants.ADMIN + "\")")
-	public ResponseEntity<String> deleteUser(@PathVariable("email") @Email String email) {
+	@DeleteMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAuthority(\"" + Constants.ADMIN + "\") and (!authentication.principal.equals(#email))")
+	public ResponseEntity<String> deleteUser(@RequestParam("email") @Email String email) {
 		log.debug("REST request to delete User: {}", email);
-		userService.deleteUser(email);
-		return success("Deleted User: " + email);
+		try {
+			userService.deleteUser(email);
+			return success("Deleted User: " + email);
+		} catch (Exception e) {
+			return failure(e);
+		}
 	}
 }

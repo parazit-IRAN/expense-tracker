@@ -18,10 +18,9 @@ import java.io.Serializable;
 public class Authority implements GrantedAuthority, Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@NotNull
 	@Size(max = 50)
 	@Id
-	@Column(name = "name", length = 50)
+	@Column(name = "name", length = 50, nullable = false)
 	private String name;
 
 	@Override

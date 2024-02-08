@@ -32,12 +32,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/authenticate/**").permitAll()
 				.anyRequest().authenticated();
 
-		http.exceptionHandling()
-				.authenticationEntryPoint(
-						(request, response, ex) -> {
-							response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-						}
-				);
 		http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
 	}

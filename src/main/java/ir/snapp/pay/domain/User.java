@@ -6,7 +6,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -25,7 +24,6 @@ public class User extends AbstractAuditingEntity<Long> implements UserDetails, S
 	private Long id;
 
 	@JsonIgnore
-	@NotNull
 	@Size(min = 60, max = 60)
 	@Column(name = "password_hash", length = 60, nullable = false)
 	private String password;

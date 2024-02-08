@@ -29,11 +29,7 @@ public class UserController extends BaseController {
 	@PreAuthorize("hasAuthority(\"" + Constants.ADMIN + "\")")
 	public ResponseEntity<UserOutputDto> createUser(@Valid @RequestBody UserInputDto userInputDto) {
 		log.debug("REST request to save User : {}", userInputDto);
-		try {
-			UserOutputDto userOutputDto = userService.createUser(userInputDto);
-			return success(userOutputDto);
-		} catch (Exception e) {
-			return failure(e);
-		}
+		UserOutputDto userOutputDto = userService.createUser(userInputDto);
+		return success(userOutputDto);
 	}
 }

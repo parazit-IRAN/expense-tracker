@@ -14,20 +14,20 @@ import java.util.List;
 public class UserInputDto implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@NotNull
-	@Size(min = 3, max = 50)
+	@NotNull(message = "firstname.must.not.be.null")
+	@Size(min = 3, max = 50, message = "firstname.size.must.be.between.val1.and.val2")
 	private String firstName;
-	@NotNull
-	@Size(min = 3, max = 50)
+	@NotNull(message = "lastname.must.not.be.null")
+	@Size(min = 3, max = 50, message = "lastname.size.must.be.between.val1.and.val2")
 	private String lastName;
-	@NotNull
-	@Email
-	@Size(min = 5, max = 254)
+	@NotNull(message = "email.must.not.be.null")
+	@Email(message = "email.must.be.valid")
+	@Size(min = 5, max = 254, message = "email.size.must.be.between.val1.and.val2")
 	private String email;
-	@NotNull
-	@Size(min = 8, max = 100)
+	@NotNull(message = "password.must.not.be.null")
+	@Size(min = 8, max = 100, message = "password.size.must.be.between.val1.and.val2")
 	private String password;
-	@NotNull
-	@Size(min = 1)
+	@NotNull(message = "authorities.must.not.be.null")
+	@Size(min = 1, message = "authorities.size.must.be.greater.than.val")
 	private List<String> authorities;
 }

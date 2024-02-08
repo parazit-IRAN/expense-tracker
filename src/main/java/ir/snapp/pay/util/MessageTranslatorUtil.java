@@ -22,10 +22,28 @@ public class MessageTranslatorUtil {
 
     public static String getText(String msgCode, Object... params) {
         Locale locale = LocaleContextHolder.getLocale();
-        return getText(msgCode, locale, params);
+        Object[] filteredParams = filterParams(params);
+        return getText(msgCode, locale, filteredParams);
     }
 
     static String getText(String msgCode, Locale locale, Object... params) {
         return messageSource.getMessage(msgCode, params, locale);
+    }
+
+    private static Object[] filterParams(Object... params) {
+        Object[] filteredParams = new Object[params.length];
+        int filteredIndex = 0;
+        for (Object param : params) {
+            if (param instanceof Integer && (Integer) param == Integer.MAX_VALUE) {
+                continue;
+            }
+            filteredParams[filteredIndex++] = param;
+        }
+        if (filteredIndex < params.length) {
+            Object[] result = new Object[filteredIndex];
+            System.arraycopy(filteredParams, 0, result, 0, filteredIndex);
+            return result;
+        }
+        return filteredParams;
     }
 }

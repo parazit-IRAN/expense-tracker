@@ -3,6 +3,8 @@ package ir.snapp.pay.configuration.security.jwt;
 
 import io.jsonwebtoken.*;
 import ir.snapp.pay.domain.User;
+import ir.snapp.pay.exception.ExpenseException;
+import ir.snapp.pay.exception.ExpenseExceptionType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -64,27 +66,30 @@ public class JwtTokenUtil {
 				.collect(Collectors.toList());
 	}
 
-	public boolean validateToken(String authToken) {
+	public boolean validateToken(String authToken) throws ExpenseException {
 		try {
 			Jwts.parser().setSigningKey(secret_key).parseClaimsJws(authToken);
 			return true;
 		} catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
 			log.info("Invalid JWT signature.");
 			log.trace("Invalid JWT signature trace.", e);
+			throw new ExpenseException(ExpenseExceptionType.TOKEN_IS_NOT_VALID_EXCEPTION);
 		} catch (ExpiredJwtException e) {
 			log.info("Expired JWT token.");
 			log.trace("Expired JWT token trace.", e);
+			throw new ExpenseException(ExpenseExceptionType.TOKEN_EXPIRED_EXCEPTION);
 		} catch (UnsupportedJwtException e) {
 			log.info("Unsupported JWT token.");
 			log.trace("Unsupported JWT token trace.", e);
+			throw new ExpenseException(ExpenseExceptionType.TOKEN_IS_NOT_VALID_EXCEPTION);
 		} catch (IllegalArgumentException e) {
 			log.info("JWT token compact of handler are invalid.");
 			log.trace("JWT token compact of handler are invalid trace.", e);
+			throw new ExpenseException(ExpenseExceptionType.TOKEN_IS_NOT_VALID_EXCEPTION);
 		} catch (Exception e) {
 			log.info("Unknown Exception.");
 			log.trace("Unknown Exception.", e);
+			throw new ExpenseException(ExpenseExceptionType.TOKEN_IS_NOT_VALID_EXCEPTION);
 		}
-
-		return false;
 	}
 }

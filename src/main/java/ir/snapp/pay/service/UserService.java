@@ -76,5 +76,15 @@ public class UserService {
 		return userMapper.userToUserOutputDto(user);
 	}
 
+	@Transactional
+	public void deleteUser(String email) {
+		userRepository
+				.findOneByEmailIgnoreCase(email)
+				.ifPresent(user -> {
+					userRepository.delete(user);
+					log.debug("Deleted User: {}", user);
+				});
+	}
+
 
 }

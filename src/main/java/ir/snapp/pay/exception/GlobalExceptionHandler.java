@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 @Slf4j
@@ -61,6 +62,16 @@ public class GlobalExceptionHandler {
 		ExpenseRestResponse<Object> expenseRestResponse = new ExpenseRestResponse<>();
 		expenseRestResponse.setErrorCode(ex.getCode());
 		expenseRestResponse.setErrorMessage(ex.getMessages());
+		return expenseRestResponse;
+	}
+
+	@ExceptionHandler({ConstraintViolationException.class})
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ExpenseRestResponse handling(ConstraintViolationException ex) {
+		log.error("custom exception thrown : {}", ex.getMessage(), ex);
+		ExpenseRestResponse<Object> expenseRestResponse = new ExpenseRestResponse<>();
+		expenseRestResponse.setErrorCode(3003);
+		expenseRestResponse.setErrorMessage(ExceptionTranslatorUtil.findCause(ex));
 		return expenseRestResponse;
 	}
 

@@ -4,6 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.postgresql.util.PSQLException;
 import org.springframework.util.StringUtils;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -57,5 +62,19 @@ public class ExceptionTranslatorUtil {
 		return messages;
 	}
 
+	public static List<String> findCause(ConstraintViolationException ex) {
+		Set<ConstraintViolation<?>> constraintViolations = ex.getConstraintViolations();
+		List<String> errorMessages = getMessageConstraintViolation(constraintViolations);
+		return errorMessages;
+
+	}
+
+	private static List<String> getMessageConstraintViolation(Set<ConstraintViolation<?>> constraintViolations) {
+		List<String> errorMessages = new ArrayList<>();
+		for (ConstraintViolation<?> violation : constraintViolations) {
+			errorMessages.add(MessageTranslatorUtil.getText(violation.getMessage()));
+		}
+		return errorMessages;
+	}
 
 }

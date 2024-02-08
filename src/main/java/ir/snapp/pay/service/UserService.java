@@ -86,5 +86,11 @@ public class UserService {
 				});
 	}
 
+	@Transactional(readOnly = true)
+	public UserOutputDto getUser(Long id) {
+		User user = userRepository.findById(id).orElseThrow(new ExpenseException(ExpenseExceptionType.USER_NOT_FOUND_EXCEPTION));
+		return userMapper.userToUserOutputDto(user);
+	}
+
 
 }

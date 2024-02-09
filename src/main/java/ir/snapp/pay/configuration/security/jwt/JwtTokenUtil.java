@@ -6,6 +6,8 @@ import ir.snapp.pay.domain.Authority;
 import ir.snapp.pay.domain.User;
 import ir.snapp.pay.exception.ExpenseException;
 import ir.snapp.pay.exception.ExpenseExceptionType;
+import ir.snapp.pay.service.UserService;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
+@AllArgsConstructor
 public class JwtTokenUtil {
 	@Value("${app.jwt.token-validity-in-seconds}")
 	private long expire_duration;
@@ -26,7 +29,10 @@ public class JwtTokenUtil {
 	private String secret_key;
 	private static final String AUTHORITIES_KEY = "auth";
 
-	public String generateAccessToken(User user) {
+	private final UserService userService;
+
+	public String generateAccessToken(String email, String password) {
+		User user = userService.getUser(email, password);
 		String authorities = user.getAuthorities().stream()
 				.map(Authority::getName)
 				.map(SimpleGrantedAuthority::new)

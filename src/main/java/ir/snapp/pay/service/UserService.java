@@ -39,6 +39,10 @@ public class UserService {
 			throw new ExpenseException(ExpenseExceptionType.PASSWORD_IS_NOT_CORRECT_EXCEPTION);
 		}
 
+		if (!user.isActivated()) {
+			throw new ExpenseException(ExpenseExceptionType.USER_IS_NOT_ACTIVE_EXCEPTION);
+		}
+
 		return user;
 	}
 
@@ -91,4 +95,10 @@ public class UserService {
 	}
 
 
+	@Transactional
+	public UserOutputDto DisableUser(Long id) {
+		User user = userRepository.findById(id).orElseThrow(new ExpenseException(ExpenseExceptionType.USER_NOT_FOUND_EXCEPTION));
+		user.setActivated(false);
+		return userMapper.userToUserOutputDto(user);
+	}
 }

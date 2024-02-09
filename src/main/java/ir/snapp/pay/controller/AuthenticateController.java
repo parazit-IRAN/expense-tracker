@@ -23,13 +23,11 @@ import javax.validation.Valid;
 public class AuthenticateController extends BaseController {
 
 	private final JwtTokenUtil jwtTokenUtil;
-	private final UserService userService;
 
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> getToken(@Valid @RequestBody LoginDto loginDTO) {
 		try {
-			User user = userService.getUser(loginDTO.getEmail(), loginDTO.getPassword());
-			String token = jwtTokenUtil.generateAccessToken(user);
+			String token = jwtTokenUtil.generateAccessToken(loginDTO.getEmail(), loginDTO.getPassword());
 			return success(token);
 		} catch (Exception e) {
 			return failure(e);

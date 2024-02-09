@@ -59,4 +59,15 @@ public class UserController extends BaseController {
 			return failure(e);
 		}
 	}
+
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAuthority(\"" + Constants.ADMIN + "\")")
+	public ResponseEntity<UserOutputDto> DisableUser(@PathVariable("id") Long id) {
+		log.debug("REST request to disable User: {}", id);
+		try {
+			return success(userService.DisableUser(id));
+		} catch (Exception e) {
+			return failure(e);
+		}
+	}
 }

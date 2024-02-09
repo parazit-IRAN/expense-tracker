@@ -89,16 +89,28 @@ public class UserService {
 	}
 
 	@Transactional(readOnly = true)
-	public UserOutputDto getUser(Long id) {
-		User user = userRepository.findById(id).orElseThrow(new ExpenseException(ExpenseExceptionType.USER_NOT_FOUND_EXCEPTION));
+	public UserOutputDto getUser(String email) {
+		User user = userRepository.findOneByEmailIgnoreCase(email).orElseThrow(new ExpenseException(ExpenseExceptionType.USER_NOT_FOUND_EXCEPTION));
 		return userMapper.userToUserOutputDto(user);
 	}
 
 
 	@Transactional
-	public UserOutputDto DisableUser(Long id) {
-		User user = userRepository.findById(id).orElseThrow(new ExpenseException(ExpenseExceptionType.USER_NOT_FOUND_EXCEPTION));
+	public UserOutputDto disableUser(String email) {
+		User user = userRepository.findOneByEmailIgnoreCaseAndActivated(email, true).orElseThrow(new ExpenseException(ExpenseExceptionType.USER_IS_NOT_ACTIVE_EXCEPTION));
 		user.setActivated(false);
 		return userMapper.userToUserOutputDto(user);
+	}
+
+	@Transactional
+	public UserOutputDto activeUser(String email) {
+		User user = userRepository.findOneByEmailIgnoreCaseAndActivated(email, false).orElseThrow(new ExpenseException(ExpenseExceptionType.USER_NOT_FOUND_EXCEPTION));
+		user.setActivated(true);
+		return userMapper.userToUserOutputDto(user);
+	}
+
+	@Transactional(readOnly = true)
+	public Boolean isActive(String email) {
+		return userRepository.findOneByEmailIgnoreCaseAndActivated(email, true).isPresent();
 	}
 }

@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 	Optional<User> findOneByEmailIgnoreCase(String email);
+	Optional<User> findOneByEmailIgnoreCaseAndActivated(String email, boolean disable);
 }

@@ -51,21 +51,32 @@ public class UserController extends BaseController {
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAuthority(\"" + Constants.USER + "\")")
-	public ResponseEntity<UserOutputDto> getUser(@PathVariable("id") Long id) {
-		log.debug("REST request to get User: {}", id);
+	public ResponseEntity<UserOutputDto> getUser(@Email(message = "email.must.be.valid") @Valid @RequestParam("email") String email) {
+		log.debug("REST request to get User: {}", email);
 		try {
-			return success(userService.getUser(id));
+			return success(userService.getUser(email));
 		} catch (Exception e) {
 			return failure(e);
 		}
 	}
 
-	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/deactivate", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAuthority(\"" + Constants.ADMIN + "\")")
-	public ResponseEntity<UserOutputDto> DisableUser(@PathVariable("id") Long id) {
-		log.debug("REST request to disable User: {}", id);
+	public ResponseEntity<UserOutputDto> disableUser(@Email(message = "email.must.be.valid") @Valid @RequestParam("email") String email) {
+		log.debug("REST request to disable User: {}", email);
 		try {
-			return success(userService.DisableUser(id));
+			return success(userService.disableUser(email));
+		} catch (Exception e) {
+			return failure(e);
+		}
+	}
+
+	@GetMapping(value = "/activate", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAuthority(\"" + Constants.ADMIN + "\")")
+	public ResponseEntity<UserOutputDto> activeUser(@Email(message = "email.must.be.valid") @Valid @RequestParam("email") String email) {
+		log.debug("REST request to disable User: {}", email);
+		try {
+			return success(userService.activeUser(email));
 		} catch (Exception e) {
 			return failure(e);
 		}

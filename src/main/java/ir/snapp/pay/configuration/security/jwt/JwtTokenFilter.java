@@ -6,7 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ir.snapp.pay.controller.ExpenseRestResponse;
 import ir.snapp.pay.exception.ExpenseException;
 import ir.snapp.pay.exception.ExpenseExceptionType;
-import lombok.AllArgsConstructor;
+import ir.snapp.pay.service.UserService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,14 +22,21 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Objects;
 
 @Component
-@AllArgsConstructor
 public class JwtTokenFilter extends OncePerRequestFilter {
 
 	private final JwtTokenUtil jwtUtil;
 	private final ObjectMapper objectMapper;
+	private final UserService userService;
 	private static final String AUTHORIZATION = "Authorization";
+
+	public JwtTokenFilter(JwtTokenUtil jwtUtil, ObjectMapper objectMapper,@Lazy UserService userService) {
+		this.jwtUtil = jwtUtil;
+		this.objectMapper = objectMapper;
+		this.userService = userService;
+	}
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -53,8 +61,21 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 			return;
 		}
 
+		if (!isActiveUser(token)) {
+			fillResponseWithCustomResult(response, ExpenseExceptionType.USER_IS_NOT_ACTIVE_EXCEPTION);
+			return;
+		}
+
 		setAuthenticationContext(token);
 		filterChain.doFilter(request, response);
+	}
+
+	private boolean isActiveUser(String token) {
+		Authentication authentication = jwtUtil.getAuthentication(token);
+		if (Objects.nonNull(authentication)) {
+			String email = String.valueOf(authentication.getPrincipal());
+			return userService.isActive(email);
+		} return false;
 	}
 
 	private boolean hasAuthorizationBearer(HttpServletRequest request) {

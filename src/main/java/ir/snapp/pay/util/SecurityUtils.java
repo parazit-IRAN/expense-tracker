@@ -6,7 +6,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -39,6 +42,17 @@ public final class SecurityUtils {
 
 	private static Stream<String> getAuthorities(Authentication authentication) {
 		return authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority);
+	}
+
+	public static CorsConfigurationSource createCorsConfigurationSource(final List<String> allowedOriginPatterns) {
+		return (request) -> {
+			CorsConfiguration corsConfiguration = new CorsConfiguration();
+			corsConfiguration.setAllowCredentials(true);
+			corsConfiguration.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT"));
+			corsConfiguration.setAllowedOriginPatterns(allowedOriginPatterns);
+			corsConfiguration.setAllowedHeaders(List.of("*"));
+			return corsConfiguration;
+		};
 	}
 
 }

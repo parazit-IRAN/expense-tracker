@@ -1,85 +1,77 @@
 package ir.snapp.pay.configuration.security.jwt;
 
-
 import io.jsonwebtoken.*;
-import ir.snapp.pay.domain.Authority;
-import ir.snapp.pay.domain.User;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import ir.snapp.pay.exception.ExpenseException;
 import ir.snapp.pay.exception.ExpenseExceptionType;
-import ir.snapp.pay.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import javax.annotation.PostConstruct;
+import java.security.Key;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Component
-public class JwtTokenUtil {
-	@Value("${app.jwt.token-validity-in-seconds}")
-	private long expire_duration;
-	@Value("${app.jwt.secret}")
-	private String secret_key;
+public class TokenProvider {
 	private static final String AUTHORITIES_KEY = "auth";
+	private Key key;
+	private JwtParser jwtParser;
+	@Value("${app.jwt.secret}")
+	private String secret;
+	@Value("${app.jwt.token-validity-in-seconds}")
+	private long tokenValidityInMilliseconds;
 
-	private final UserService userService;
 
-	public JwtTokenUtil(@Lazy UserService userService) {
-		this.userService = userService;
+	@PostConstruct
+	public void initialize() {
+		byte[] keyBytes = Decoders.BASE64.decode(secret);
+		this.key = Keys.hmacShaKeyFor(keyBytes);
+		this.jwtParser = Jwts.parserBuilder().setSigningKey(key).build();
 	}
 
-	public String generateAccessToken(String email, String password) {
-		User user = userService.getUser(email, password);
-		String authorities = user.getAuthorities().stream()
-				.map(Authority::getName)
-				.map(SimpleGrantedAuthority::new)
-				.map(SimpleGrantedAuthority::getAuthority)
-				.collect(Collectors.joining(","));
-		Map<String, Object> map = new HashMap<>();
-		map.put(AUTHORITIES_KEY, authorities);
-		map.put("sub", user.getEmail());
-		return Jwts.builder()
-				.setClaims(map)
-				.setIssuedAt(new Date())
-				.setExpiration(new Date(System.currentTimeMillis() + expire_duration))
-				.signWith(SignatureAlgorithm.HS512, secret_key)
+	public String createToken(Authentication authentication) {
+		String authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
+
+		long now = (new Date()).getTime();
+		Date validity = new Date(now + this.tokenValidityInMilliseconds);
+
+		return Jwts
+				.builder()
+				.setSubject(authentication.getName())
+				.claim(AUTHORITIES_KEY, authorities)
+				.signWith(key, SignatureAlgorithm.HS512)
+				.setExpiration(validity)
 				.compact();
 	}
 
-
 	public Authentication getAuthentication(String token) {
-		Claims claims = getClaims(token);
-		Collection<? extends GrantedAuthority> authorities = getGrantedAuthorities(claims);
-		return getUsernamePasswordAuthenticationToken(token, claims, authorities);
-	}
+		Claims claims = jwtParser.parseClaimsJws(token).getBody();
 
-	private static UsernamePasswordAuthenticationToken getUsernamePasswordAuthenticationToken(String token
-			, Claims claims, Collection<? extends GrantedAuthority> authorities) {
-		return new UsernamePasswordAuthenticationToken(claims.getSubject(), token, authorities);
-	}
-
-	private Claims getClaims(String token) {
-		return Jwts.parser()
-				.setSigningKey(secret_key)
-				.parseClaimsJws(token)
-				.getBody();
-	}
-
-	private static Collection<? extends GrantedAuthority> getGrantedAuthorities(Claims claims) {
-		return Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
+		Collection<? extends GrantedAuthority> authorities = Arrays
+				.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
+				.filter(auth -> !auth.trim().isEmpty())
 				.map(SimpleGrantedAuthority::new)
 				.collect(Collectors.toList());
+
+		User principal = new User(claims.getSubject(), "", authorities);
+
+		return new UsernamePasswordAuthenticationToken(principal, token, authorities);
 	}
 
 	public boolean validateToken(String authToken) throws ExpenseException {
 		try {
-			Jwts.parser().setSigningKey(secret_key).parseClaimsJws(authToken);
+			Jwts.parser().setSigningKey(secret).parseClaimsJws(authToken);
 			return true;
 		} catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
 			log.info("Invalid JWT signature.");

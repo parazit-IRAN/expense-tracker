@@ -78,12 +78,10 @@ public class UserService {
 
 	@Transactional
 	public void deleteUser(String email) {
-		userRepository
-				.findOneByEmailIgnoreCase(email)
-				.ifPresent(user -> {
-					userRepository.delete(user);
-					log.debug("Deleted User: {}", user);
-				});
+		User user = userRepository.findOneByEmailIgnoreCase(email)
+				.orElseThrow(() -> new ExpenseException(ExpenseExceptionType.USER_NOT_FOUND_EXCEPTION));
+		userRepository.delete(user);
+		log.debug("Deleted User: {}", user);
 	}
 
 	@Transactional(readOnly = true)

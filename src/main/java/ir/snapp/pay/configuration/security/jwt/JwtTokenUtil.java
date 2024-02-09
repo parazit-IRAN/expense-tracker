@@ -2,6 +2,7 @@ package ir.snapp.pay.configuration.security.jwt;
 
 
 import io.jsonwebtoken.*;
+import ir.snapp.pay.domain.Authority;
 import ir.snapp.pay.domain.User;
 import ir.snapp.pay.exception.ExpenseException;
 import ir.snapp.pay.exception.ExpenseExceptionType;
@@ -26,10 +27,13 @@ public class JwtTokenUtil {
 	private static final String AUTHORITIES_KEY = "auth";
 
 	public String generateAccessToken(User user) {
-		String authorities = user.getAuthorities().stream().map(GrantedAuthority::getAuthority)
+		String authorities = user.getAuthorities().stream()
+				.map(Authority::getName)
+				.map(SimpleGrantedAuthority::new)
+				.map(SimpleGrantedAuthority::getAuthority)
 				.collect(Collectors.joining(","));
 		Map<String, Object> map = new HashMap<>();
-		map.put("auth", authorities);
+		map.put(AUTHORITIES_KEY, authorities);
 		map.put("sub", user.getEmail());
 		return Jwts.builder()
 				.setClaims(map)

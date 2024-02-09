@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -41,6 +41,10 @@ public class User extends AbstractAuditingEntity<Long> implements UserDetails, S
 	@Size(min = 5, max = 254)
 	@Column(length = 254, unique = true, nullable = false)
 	private String email;
+
+	@NotNull
+	@Column(nullable = false)
+	private boolean activated = true;
 
 	@JsonIgnore
 	@ManyToMany

@@ -20,6 +20,7 @@ public class UserMapper {
 				.firstName(user.getFirstName())
 				.lastName(user.getLastName())
 				.email(user.getEmail())
+				.isActivated(user.isActivated())
 				.authorities(user.getAuthorities().stream().map(Authority::getName).collect(Collectors.toList()))
 				.build();
 	}
@@ -29,6 +30,7 @@ public class UserMapper {
 		user.setFirstName(userInputDto.getFirstName());
 		user.setLastName(userInputDto.getLastName());
 		user.setEmail(userInputDto.getEmail());
+		user.setActivated(true);
 		List<Authority> authorities = this.authoritiesToAuthorities(userInputDto.getAuthorities());
 		user.setAuthorities(authorities);
 		return user;

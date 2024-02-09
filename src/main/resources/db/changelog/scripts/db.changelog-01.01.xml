@@ -20,6 +20,9 @@
             <column name="email" type="${stringType}(191)">
                 <constraints unique="true" nullable="false" uniqueConstraintName="user_email"/>
             </column>
+            <column name="activated" type="boolean" valueBoolean="true">
+                <constraints nullable="false" />
+            </column>
             <column name="created_by" type="${stringType}(50)">
                 <constraints nullable="false"/>
             </column>

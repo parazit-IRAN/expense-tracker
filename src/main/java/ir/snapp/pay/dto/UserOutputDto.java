@@ -15,6 +15,7 @@ public class UserOutputDto implements Serializable {
 	private String firstName;
 	private String lastName;
 	private String email;
+	private Boolean isActivated;
 	private List<String> authorities;
 }
 

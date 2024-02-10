@@ -36,4 +36,9 @@ public class Transaction implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "user_id", updatable = false, insertable = false)
 	private User user;
+
+	@ManyToOne
+	@JoinColumn(name = "account_id", updatable = false, insertable = false)
+	private Account account;
+
 }

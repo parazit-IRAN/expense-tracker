@@ -50,6 +50,25 @@
     </changeSet>
 
     <changeSet id="00000000000006" author="Kamali">
+        <createTable tableName="account">
+            <column name="id" type="${longType}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="${stringType}(255)"/>
+            <column name="type" type="${stringType}(255)"/>
+            <column name="user_id" type="${longType}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint
+                baseTableName="account"
+                baseColumnNames="user_id"
+                constraintName="fk_account_user"
+                referencedTableName="my_user"
+                referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="00000000000007" author="Kamali">
         <createTable tableName="transactions">
             <column name="id" type="${longType}" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -61,6 +80,9 @@
                 <constraints nullable="false"/>
             </column>
             <column name="user_id" type="${longType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="account_id" type="${longType}">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -78,9 +100,16 @@
                 referencedTableName="category"
                 referencedColumnNames="id"/>
 
+        <addForeignKeyConstraint
+                baseTableName="transactions"
+                baseColumnNames="account_id"
+                constraintName="fk_transaction_account"
+                referencedTableName="account"
+                referencedColumnNames="id"/>
+
     </changeSet>
 
-    <changeSet id="00000000000007" author="Kamali">
+    <changeSet id="00000000000008" author="Kamali">
         <createTable tableName="budget">
             <column name="id" type="${longType}" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>

@@ -63,6 +63,9 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
 	@OneToMany(mappedBy = "user")
 	private List<Budget> budgets;
 
+	@OneToMany(mappedBy = "user")
+	private List<Account> accounts;
+
 	@Size(min = 2, max = 10)
 	@Column(name = "language", length = 10)
 	private String language = "en";

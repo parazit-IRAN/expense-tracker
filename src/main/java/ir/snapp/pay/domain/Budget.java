@@ -16,6 +16,7 @@ public class Budget implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Long id;
 
 	@Size(min = 1, max = 255)
@@ -26,12 +27,12 @@ public class Budget implements Serializable {
 	private BigDecimal amount;
 
 	@ManyToOne
-	@JoinColumn(name = "user_id", updatable = false, insertable = false)
+	@JoinColumn(name = "user_id")
 	private User user;
 
 	@ManyToOne
-	@JoinColumn(name = "category_id", updatable = false, insertable = false)
+	@JoinColumn(name = "category_id")
 	private Category category;
 
-
 }
+

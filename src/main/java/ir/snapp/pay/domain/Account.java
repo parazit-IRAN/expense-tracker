@@ -1,12 +1,15 @@
 package ir.snapp.pay.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import ir.snapp.pay.constant.AccountType;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -17,6 +20,7 @@ public class Account implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Long id;
 
 	@Size(min = 1, max = 255)
@@ -39,9 +43,11 @@ public class Account implements Serializable {
 	private BigDecimal balance;
 
 	@ManyToOne
-	@JoinColumn(name = "user_id", updatable = false, insertable = false)
+	@JoinColumn(name = "user_id")
 	private User user;
 
+	@JsonManagedReference
 	@OneToMany(mappedBy = "account")
-	private List<Transaction> transactions;
+	@ToString.Exclude
+	private List<Transaction> transactions = new ArrayList<>();
 }

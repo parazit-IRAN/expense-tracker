@@ -18,7 +18,10 @@ public enum ExpenseExceptionType {
 	PERMISSION_DENIED_EXCEPTION(6, "permission.denied"),
 	TOKEN_IS_NOT_VALID_EXCEPTION(7, "token.is.not.valid"),
 	AUTHORITIES_NOT_FOUND_EXCEPTION(8, "authorities.not.found"),
-	USER_IS_NOT_ACTIVE_EXCEPTION(9, "user.is.not.active"),;
+	USER_IS_NOT_ACTIVE_EXCEPTION(9, "user.is.not.active"),
+	ACCOUNT_NOT_FOUND_EXCEPTION(10, "account.is.not.active"),
+	CATEGORY_NOT_FOUND_EXCEPTION(11, "category.is.not.active"),
+	TRANSACTION_NOT_FOUND_EXCEPTION(12, "transaction.is.not.active");
 
 	private int errorCode;
 	private String errorMessage;

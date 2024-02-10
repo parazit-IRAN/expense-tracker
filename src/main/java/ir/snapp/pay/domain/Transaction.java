@@ -1,6 +1,7 @@
 package ir.snapp.pay.domain;
 
 
+import ir.snapp.pay.constant.TransactionType;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -17,28 +18,33 @@ public class Transaction implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Long id;
 
 	@Column(name = "date")
-	private Instant date;
+	private Instant date = Instant.now();
 
 	@Column(name = "amount", scale = 4, precision = 10)
 	private BigDecimal amount;
 
-	@Size(min = 1, max = 255)
+	@Size(max = 255)
 	@Column(name = "description")
 	private String description;
 
+	@Column(name = "type")
+	@Enumerated(EnumType.STRING)
+	private TransactionType type = TransactionType.EXPENSE;
+
 	@ManyToOne
-	@JoinColumn(name = "category_id", updatable = false, insertable = false)
+	@JoinColumn(name = "category_id")
 	private Category category;
 
 	@ManyToOne
-	@JoinColumn(name = "user_id", updatable = false, insertable = false)
+	@JoinColumn(name = "user_id")
 	private User user;
 
 	@ManyToOne
-	@JoinColumn(name = "account_id", updatable = false, insertable = false)
+	@JoinColumn(name = "account_id")
 	private Account account;
 
 }

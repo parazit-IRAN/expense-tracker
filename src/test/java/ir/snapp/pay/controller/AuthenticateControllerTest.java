@@ -3,6 +3,9 @@ package ir.snapp.pay.controller;
 import ir.snapp.pay.domain.User;
 import ir.snapp.pay.dto.LoginDto;
 import ir.snapp.pay.repository.UserRepository;
+import ir.snapp.pay.util.DbTestUtils;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -26,6 +29,14 @@ class AuthenticateControllerTest extends AbstractRestControllerTest {
 	private PasswordEncoder passwordEncoder;
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private DbTestUtils dbTestUtils;
+
+	@BeforeEach
+	@AfterEach
+	public void init() {
+		dbTestUtils.cleanAllTables();
+	}
 
 	private static final String EMAIL = "user@example.com";
 	private static final String PASSWORD = "passwordEncrypt";

@@ -7,6 +7,7 @@ import ir.snapp.pay.dto.UserInputDto;
 import ir.snapp.pay.dto.UserSettingDto;
 import ir.snapp.pay.repository.UserRepository;
 import ir.snapp.pay.util.DbTestUtils;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,8 +38,10 @@ class UserControllerTest extends AbstractRestControllerTest {
 
 
 	@BeforeEach
+	@AfterEach
 	public void initTest() {
 		dbTestUtils.cleanAllTables();
+		createAdmin();
 	}
 
 	@Test
@@ -164,6 +167,17 @@ class UserControllerTest extends AbstractRestControllerTest {
 		user.setPassword(passwordEncoder.encode(PASSWORD));
 		Authority authority = new Authority();
 		authority.setName(Constants.USER);
+		user.setAuthorities(List.of(authority));
+		return userRepository.saveAndFlush(user);
+	}
+
+	private User createAdmin() {
+		User user = new User();
+		user.setEmail(ADMIN_EMAIL);
+		user.setActivated(true);
+		user.setPassword(passwordEncoder.encode(PASSWORD));
+		Authority authority = new Authority();
+		authority.setName(Constants.ADMIN);
 		user.setAuthorities(List.of(authority));
 		return userRepository.saveAndFlush(user);
 	}

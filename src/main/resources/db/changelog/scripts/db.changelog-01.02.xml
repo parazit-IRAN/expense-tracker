@@ -72,13 +72,16 @@
     </changeSet>
 
     <changeSet id="00000000000007" author="Kamali">
-        <createTable tableName="transactions">
+        <createTable tableName="transaction">
             <column name="id" type="${longType}" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="date" type="${dateType}"/>
             <column name="amount" type="${bigDecimalType}(10,4)"/>
             <column name="description" type="${stringType}(255)"/>
+            <column name="type" type="${stringType}(255)" >
+                <constraints nullable="false"/>
+            </column>
             <column name="category_id" type="${longType}">
                 <constraints nullable="false"/>
             </column>
@@ -90,21 +93,21 @@
             </column>
         </createTable>
         <addForeignKeyConstraint
-                baseTableName="transactions"
+                baseTableName="transaction"
                 baseColumnNames="user_id"
                 constraintName="fk_transaction_user"
                 referencedTableName="my_user"
                 referencedColumnNames="id"/>
 
         <addForeignKeyConstraint
-                baseTableName="transactions"
+                baseTableName="transaction"
                 baseColumnNames="category_id"
                 constraintName="fk_transaction_category"
                 referencedTableName="category"
                 referencedColumnNames="id"/>
 
         <addForeignKeyConstraint
-                baseTableName="transactions"
+                baseTableName="transaction"
                 baseColumnNames="account_id"
                 constraintName="fk_transaction_account"
                 referencedTableName="account"
@@ -118,7 +121,11 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="name" type="${stringType}(255)"/>
+            <column name="amount" type="${bigDecimalType}(10,4)"/>
             <column name="user_id" type="${longType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_id" type="${longType}">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -127,6 +134,12 @@
                 baseColumnNames="user_id"
                 constraintName="fk_budget_user"
                 referencedTableName="my_user"
+                referencedColumnNames="id"/>
+        <addForeignKeyConstraint
+                baseTableName="budget"
+                baseColumnNames="category_id"
+                constraintName="fk_budget_category"
+                referencedTableName="category"
                 referencedColumnNames="id"/>
     </changeSet>
 

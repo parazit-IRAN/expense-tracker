@@ -1,7 +1,9 @@
 package ir.snapp.pay.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
+import lombok.ToString;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
@@ -23,8 +25,7 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence_generator")
-	@SequenceGenerator(name = "sequence_generator", sequenceName = "sequence_generator", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Long id;
 
 	@JsonIgnore
@@ -57,14 +58,17 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
 	)
 	private List<Authority> authorities = new ArrayList<>();
 
-	@OneToMany(mappedBy = "user")
-	private List<Transaction> transactions;
+	@JsonManagedReference
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private List<Transaction> transactions = new ArrayList<>();
 
-	@OneToMany(mappedBy = "user")
-	private List<Budget> budgets;
+	@JsonManagedReference
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private List<Budget> budgets = new ArrayList<>();
 
-	@OneToMany(mappedBy = "user")
-	private List<Account> accounts;
+	@JsonManagedReference
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private List<Account> accounts = new ArrayList<>();
 
 	@Size(min = 2, max = 10)
 	@Column(name = "language", length = 10)

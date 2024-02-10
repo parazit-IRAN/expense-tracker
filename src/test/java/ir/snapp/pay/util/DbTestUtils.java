@@ -24,6 +24,9 @@ public class DbTestUtils {
 		return new String[]{
 				"user_authority",
 				"my_user",
+				"transaction",
+				"account",
+				"budget",
 		};
 	}
 }

@@ -36,20 +36,19 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="name" type="${stringType}(255)"/>
+            <column name="user_id" type="${longType}">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
+        <addForeignKeyConstraint
+                baseTableName="category"
+                baseColumnNames="user_id"
+                constraintName="fk_category_user"
+                referencedTableName="my_user"
+                referencedColumnNames="id"/>
     </changeSet>
 
     <changeSet id="00000000000005" author="Kamali">
-        <loadData
-                file="db/changelog/data/default_category.csv"
-                separator=";"
-                tableName="category"
-                usePreparedStatements="true">
-            <column name="name" type="${stringType}(255)"/>
-        </loadData>
-    </changeSet>
-
-    <changeSet id="00000000000006" author="Kamali">
         <createTable tableName="account">
             <column name="id" type="${longType}" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -71,7 +70,7 @@
                 referencedColumnNames="id"/>
     </changeSet>
 
-    <changeSet id="00000000000007" author="Kamali">
+    <changeSet id="00000000000006" author="Kamali">
         <createTable tableName="transaction">
             <column name="id" type="${longType}" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -115,7 +114,7 @@
 
     </changeSet>
 
-    <changeSet id="00000000000008" author="Kamali">
+    <changeSet id="00000000000007" author="Kamali">
         <createTable tableName="budget">
             <column name="id" type="${longType}" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>

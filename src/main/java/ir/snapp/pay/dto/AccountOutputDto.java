@@ -6,19 +6,19 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.Instant;
+import java.util.List;
 
 @Data
 @Builder
-public class TransactionOutputDto implements Serializable {
+public class AccountOutputDto implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
-	private Instant date;
-	private BigDecimal amount;
-	private String description;
+	private String name;
 	private String type;
-	private CategoryOutputDto category;
+	private String currency;
+	private String description;
+	private BigDecimal balance;
 	private UserOutputDto user;
-	private AccountOutputDto account;
+	private List<TransactionOutputDto> transactions;
 }

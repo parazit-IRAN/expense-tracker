@@ -64,7 +64,7 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
 
 	@JsonManagedReference
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	private List<Budget> budgets = new ArrayList<>();
+	private List<Category> categories = new ArrayList<>();
 
 	@JsonManagedReference
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

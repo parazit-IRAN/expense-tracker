@@ -3,6 +3,7 @@ package ir.snapp.pay.domain;
 
 import ir.snapp.pay.constant.TransactionType;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -37,14 +38,17 @@ public class Transaction implements Serializable {
 
 	@ManyToOne
 	@JoinColumn(name = "category_id")
+	@ToString.Exclude
 	private Category category;
 
 	@ManyToOne
 	@JoinColumn(name = "user_id")
+	@ToString.Exclude
 	private User user;
 
 	@ManyToOne
 	@JoinColumn(name = "account_id")
+	@ToString.Exclude
 	private Account account;
 
 }

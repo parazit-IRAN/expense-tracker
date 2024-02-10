@@ -4,7 +4,6 @@ import ir.snapp.pay.constant.AccountType;
 import ir.snapp.pay.constant.Constants;
 import ir.snapp.pay.constant.TransactionType;
 import ir.snapp.pay.domain.*;
-import ir.snapp.pay.dto.TransactionInputDto;
 import ir.snapp.pay.repository.AccountRepository;
 import ir.snapp.pay.repository.CategoryRepository;
 import ir.snapp.pay.repository.TransactionRepository;
@@ -26,95 +25,78 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-
 @AutoConfigureMockMvc
 @IntegrationTest
-class TransactionControllerTest extends AbstractRestControllerTest {
+class CategoryControllerTest extends AbstractRestControllerTest {
 
 	@Autowired
-	private UserRepository userRepository;
+	private DbTestUtils dbTestUtils;
 	@Autowired
 	private CategoryRepository categoryRepository;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	@Autowired
+	private UserRepository userRepository;
 	@Autowired
 	private AccountRepository accountRepository;
 	@Autowired
 	private TransactionRepository transactionRepository;
-	@Autowired
-	private DbTestUtils dbTestUtils;
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+
 	private User user;
-	private Account account;
-	private Category category;
+
 
 	private static final String EMAIL = "user@example.com";
+	private static final String ADMIN_EMAIL = "admin@localhost";
 	private static final String PASSWORD = "passwordEncrypt";
 
 	@BeforeEach
+	@AfterEach
 	public void initTest() {
 		dbTestUtils.cleanAllTables();
 		user = createUser();
-		account = createAccount(user);
-		createCategory("Salary", user);
-		category = createCategory("Transport", user);
-	}
-
-	@AfterEach()
-	public void after() {
-		dbTestUtils.cleanAllTables();
 	}
 
 	@Test
 	@WithMockUser(username = EMAIL, password = PASSWORD, authorities = {Constants.USER})
-	void testCreateTransaction() throws Exception {
-		BigDecimal AMOUNT = new BigDecimal(10.0);
-
-		TransactionInputDto transactionInputDto = TransactionInputDto.builder()
-				.userId(user.getId())
-				.accountId(account.getId())
-				.amount(AMOUNT)
-				.categoryId(category.getId())
-				.type("EXPENSE")
-				.build();
-
+	void testCreateCategory() throws Exception {
+		String NEW_CATEGORY = "NEW_CATEGORY";
 
 		this.mockMvc
-				.perform(post("/transactions").contentType(MediaType.APPLICATION_JSON).content(this.toJson(transactionInputDto)))
+				.perform(post("/categories").contentType(MediaType.APPLICATION_JSON).content(this.toJson(NEW_CATEGORY)))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-				.andExpect(jsonPath("$.amount").value(AMOUNT))
-				.andExpect(jsonPath("$.category.name").value(category.getName()))
-				.andExpect(jsonPath("$.account.name").value(account.getName()))
-				.andExpect(jsonPath("$.user.email").value(user.getEmail()));
+				.andExpect(jsonPath("$.name").value(NEW_CATEGORY));
 	}
 
 	@Test
 	@WithMockUser(username = EMAIL, password = PASSWORD, authorities = {Constants.USER})
-	void testDeleteTransaction() throws Exception {
-		Transaction transaction = createTransaction();
+	void testDeleteCategory() throws Exception {
+		Category category = createCategory(user);
+		Transaction transaction = createTransaction(category, user);
 
 		this.mockMvc
-				.perform(delete("/transactions/{id}", transaction.getId()))
+				.perform(delete("/categories/{id}", category.getId()))
 				.andExpect(status().isOk())
-				.andExpect(content().string("Deleted Transaction id: " + transaction.getId()));
+				.andExpect(content().string("Deleted Category id: " + category.getId()));
+
 	}
 
-	private Transaction createTransaction() {
+	private Category createCategory(User user) {
+		Category category = new Category();
+		category.setName("NEW_CATEGORY");
+		category.setUser(user);
+		return categoryRepository.save(category);
+	}
+
+	private Transaction createTransaction(Category category, User user) {
 		Transaction transaction = new Transaction();
 		transaction.setAccount(createAccount(user));
 		transaction.setAmount(new BigDecimal(1000));
-		transaction.setCategory(createCategory("Transport", user));
+		transaction.setCategory(category);
 		transaction.setUser(user);
 		transaction.setType(TransactionType.EXPENSE);
 		transactionRepository.save(transaction);
 		return transaction;
-	}
-
-	private Category createCategory(String name, User user) {
-		Category category = new Category();
-		category.setName(name);
-		category.setUser(user);
-		return categoryRepository.save(category);
 	}
 
 	private Account createAccount(User user) {
@@ -127,7 +109,6 @@ class TransactionControllerTest extends AbstractRestControllerTest {
 		account.setTransactions(List.of());
 		return accountRepository.save(account);
 	}
-
 
 	private User createUser() {
 		User user = new User();

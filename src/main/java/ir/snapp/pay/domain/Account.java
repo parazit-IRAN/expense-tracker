@@ -44,10 +44,10 @@ public class Account implements Serializable {
 
 	@ManyToOne
 	@JoinColumn(name = "user_id")
+	@ToString.Exclude
 	private User user;
 
 	@JsonManagedReference
 	@OneToMany(mappedBy = "account")
-	@ToString.Exclude
 	private List<Transaction> transactions = new ArrayList<>();
 }

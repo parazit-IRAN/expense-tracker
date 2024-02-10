@@ -9,8 +9,10 @@ import ir.snapp.pay.dto.UserSettingDto;
 import ir.snapp.pay.exception.ExpenseException;
 import ir.snapp.pay.exception.ExpenseExceptionType;
 import ir.snapp.pay.repository.AuthorityRepository;
+import ir.snapp.pay.repository.CategoryRepository;
 import ir.snapp.pay.repository.UserRepository;
 import ir.snapp.pay.service.mapper.UserMapper;
+import ir.snapp.pay.util.SecurityUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -32,6 +34,7 @@ public class UserService {
 	private final PasswordEncoder passwordEncoder;
 	private final UserMapper userMapper;
 	private final AuthorityRepository authorityRepository;
+	private final CategoryService categoryService;
 
 	@Transactional(readOnly = true)
 	public User getUser(String email, String password) throws ExpenseException {
@@ -79,6 +82,7 @@ public class UserService {
 			throw new ExpenseException(ExpenseExceptionType.AUTHORITIES_NOT_FOUND_EXCEPTION);
 		}
 		userRepository.save(user);
+		categoryService.createDefaultCategory(user);
 		log.debug("Created an user: {}", user);
 		return userMapper.userToUserOutputDto(user);
 	}

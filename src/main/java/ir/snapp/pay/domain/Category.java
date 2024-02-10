@@ -2,8 +2,7 @@ package ir.snapp.pay.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -12,6 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "category")
 public class Category implements Serializable {
@@ -27,9 +29,13 @@ public class Category implements Serializable {
 	private String name;
 
 	@JsonManagedReference
-	@OneToMany(mappedBy = "category")
+	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+	private List<Transaction> transactions = new ArrayList<>();
+
+	@ManyToOne
+	@JoinColumn(name = "user_id")
 	@ToString.Exclude
-	private List<Budget> budgets = new ArrayList<>();
+	private User user;
 
 }
 

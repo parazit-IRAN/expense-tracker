@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.10.xsd">
+
+    <changeSet id="00000000000002" author="kamali">
+        <addColumn tableName="my_user">
+            <column name="language" type="${stringType}(10)"/>
+            <column name="default_currency" type="${stringType}(10)"/>
+            <column name="date_format" type="${stringType}(50)"/>
+            <column name="first_day_of_week" type="${stringType}(10)"/>
+            <column name="first_day_of_month" type="${shortType}"/>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

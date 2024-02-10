@@ -8,7 +8,10 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.time.DayOfWeek;
+import java.time.MonthDay;
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.List;
 
 @Data
@@ -52,4 +55,21 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
 			inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "name")}
 	)
 	private List<Authority> authorities = new ArrayList<>();
+
+	@Size(min = 2, max = 10)
+	@Column(length = 10)
+	private String language = "en";
+	@Size(min = 2, max = 10)
+	@Column(length = 10)
+	private String defaultCurrency = "USD";
+	@Size(min = 8, max = 50)
+	@Column(length = 50)
+	private String dateFormat = "dd/MM/yyyy";
+	@Size(min = 5, max = 10)
+	@Column(length = 10)
+	@Enumerated(EnumType.STRING)
+	private DayOfWeek firstDayOfWeek = DayOfWeek.SATURDAY;
+	@Size(min = 1, max = 3)
+	@Column(length = 3)
+	private Integer firstDayOfMonth = 1 ;
 }

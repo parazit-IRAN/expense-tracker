@@ -56,6 +56,9 @@
             </column>
             <column name="name" type="${stringType}(255)"/>
             <column name="type" type="${stringType}(255)"/>
+            <column name="currency" type="${stringType}(10)"/>
+            <column name="description" type="${stringType}(255)"/>
+            <column name="balance" type="${bigDecimalType}(10,4)"/>
             <column name="user_id" type="${longType}">
                 <constraints nullable="false"/>
             </column>

@@ -113,4 +113,32 @@ public class UserService {
 	public Boolean isActive(String email) {
 		return userRepository.findOneByEmailIgnoreCaseAndActivated(email, true).isPresent();
 	}
+
+	public UserOutputDto updateUser(String email, UserInputDto userInputDto) {
+		User existUser = userRepository.findOneByEmailIgnoreCase(email)
+				.orElseThrow(new ExpenseException(ExpenseExceptionType.USER_NOT_FOUND_EXCEPTION));
+
+		existUser.setFirstName(userInputDto.getFirstName());
+		existUser.setLastName(userInputDto.getLastName());
+		existUser.setEmail(userInputDto.getEmail().toLowerCase());
+		String encryptedPassword = passwordEncoder.encode(userInputDto.getPassword());
+		existUser.setPassword(encryptedPassword);
+		if (userInputDto.getAuthorities() != null) {
+			List<Authority> authorities = userInputDto
+					.getAuthorities()
+					.stream()
+					.map(authorityRepository::findById)
+					.filter(Optional::isPresent)
+					.map(Optional::get)
+					.collect(Collectors.toList());
+			existUser.setAuthorities(authorities);
+		}
+
+		if (existUser.getAuthorities().isEmpty()) {
+			throw new ExpenseException(ExpenseExceptionType.AUTHORITIES_NOT_FOUND_EXCEPTION);
+		}
+		userRepository.save(existUser);
+		log.debug("Updated an user: {}", existUser);
+		return userMapper.userToUserOutputDto(existUser);
+	}
 }

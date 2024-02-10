@@ -15,7 +15,9 @@ public class DbTestUtils {
 
 	public void cleanAllTables() {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+		jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
 		JdbcTestUtils.deleteFromTables(jdbcTemplate, getAllTables());
+		jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
 	}
 
 	private String[] getAllTables() {

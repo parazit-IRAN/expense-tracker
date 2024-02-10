@@ -4,6 +4,7 @@ import ir.snapp.pay.constant.Constants;
 import ir.snapp.pay.domain.Authority;
 import ir.snapp.pay.domain.User;
 import ir.snapp.pay.dto.UserInputDto;
+import ir.snapp.pay.dto.UserSettingDto;
 import ir.snapp.pay.repository.UserRepository;
 import ir.snapp.pay.util.DbTestUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -136,6 +137,24 @@ class UserControllerTest extends AbstractRestControllerTest {
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
 				.andExpect(jsonPath("$.email").value(EMAIL))
 				.andExpect(jsonPath("$.isActivated").value(true));
+	}
+
+	@Test
+	@WithMockUser(username = EMAIL, password = PASSWORD, authorities = {Constants.USER})
+	void testUpdateUserSettings() throws Exception {
+		createUser();
+
+		UserSettingDto userSettingDto = UserSettingDto.builder()
+				.language("fa")
+				.build();
+
+
+		this.mockMvc
+				.perform(put("/users/settings/{email}", EMAIL).contentType(MediaType.APPLICATION_JSON).content(this.toJson(userSettingDto)))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(jsonPath("$.email").value(EMAIL))
+				.andExpect(jsonPath("$.language").value("fa"));
 	}
 
 	private User createUser() {

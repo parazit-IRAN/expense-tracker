@@ -10,6 +10,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.DayOfWeek;
+
 import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.not;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -56,8 +58,15 @@ class AuthenticateControllerTest extends AbstractRestControllerTest {
 	private User createUser() {
 		User user = new User();
 		user.setEmail(EMAIL);
+		user.setFirstName("first-name");
+		user.setLastName("last-name");
 		user.setActivated(true);
 		user.setPassword(passwordEncoder.encode(PASSWORD));
+		user.setLanguage("en");
+		user.setDefaultCurrency("USD");
+		user.setDateFormat("dd/MM/yyyy");
+		user.setFirstDayOfWeek(DayOfWeek.SATURDAY);
+		user.setFirstDayOfMonth(1);
 		return userRepository.saveAndFlush(user);
 	}
 

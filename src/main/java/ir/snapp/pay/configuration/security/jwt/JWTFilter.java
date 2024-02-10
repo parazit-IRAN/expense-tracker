@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ir.snapp.pay.controller.ExpenseRestResponse;
 import ir.snapp.pay.exception.ExpenseException;
 import ir.snapp.pay.exception.ExpenseExceptionType;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
@@ -15,6 +16,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -64,8 +66,10 @@ public class JWTFilter extends GenericFilterBean {
 	}
 
 	public void fillResponseWithCustomResult(ServletResponse response, int code, List<String> messages) {
-		response.setCharacterEncoding("UTF-8");
-		response.setContentType("application/json;charset=UTF-8");
+		HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+		httpServletResponse.setCharacterEncoding("UTF-8");
+		httpServletResponse.setContentType("application/json;charset=UTF-8");
+		httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
 		ExpenseRestResponse<ExpenseExceptionType> expenseRestResponse = new ExpenseRestResponse<>();
 		expenseRestResponse.setErrorCode(code);
 		expenseRestResponse.setErrorMessage(messages);

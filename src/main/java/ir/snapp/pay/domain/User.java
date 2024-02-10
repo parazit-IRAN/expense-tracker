@@ -2,6 +2,7 @@ package ir.snapp.pay.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -56,20 +57,25 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
 	)
 	private List<Authority> authorities = new ArrayList<>();
 
+	@OneToMany(mappedBy = "user")
+	private List<Transaction> transactions;
+
+	@OneToMany(mappedBy = "user")
+	private List<Budget> budgets;
+
 	@Size(min = 2, max = 10)
-	@Column(length = 10)
+	@Column(name = "language", length = 10)
 	private String language = "en";
 	@Size(min = 2, max = 10)
-	@Column(length = 10)
+	@Column(name = "default_currency", length = 10)
 	private String defaultCurrency = "USD";
 	@Size(min = 8, max = 50)
-	@Column(length = 50)
+	@Column(name = "date_format", length = 50)
 	private String dateFormat = "dd/MM/yyyy";
-	@Size(min = 5, max = 10)
-	@Column(length = 10)
+	@Column(name = "first_day_of_week")
 	@Enumerated(EnumType.STRING)
 	private DayOfWeek firstDayOfWeek = DayOfWeek.SATURDAY;
-	@Size(min = 1, max = 3)
-	@Column(length = 3)
+	@Range(min = 1, max = 3)
+	@Column(name = "first_day_of_month", length = 3)
 	private Integer firstDayOfMonth = 1 ;
 }

@@ -15,4 +15,87 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="00000000000003" author="Kamali">
+        <loadUpdateData
+                file="db/changelog/data/update_user.csv"
+                separator=";"
+                tableName="my_user"
+                primaryKey="id">
+            <column name="id" type="${longType}"/>
+            <column name="language" type="${stringType}(10)"/>
+            <column name="default_currency" type="${stringType}(10)"/>
+            <column name="date_format" type="${stringType}(50)"/>
+            <column name="first_day_of_week" type="${stringType}(10)"/>
+            <column name="first_day_of_month" type="${integerType}"/>
+        </loadUpdateData>
+    </changeSet>
+
+    <changeSet id="00000000000004" author="Kamali">
+        <createTable tableName="category">
+            <column name="id" type="${longType}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="${stringType}(255)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="00000000000005" author="Kamali">
+        <loadData
+                file="db/changelog/data/default_category.csv"
+                separator=";"
+                tableName="category"
+                usePreparedStatements="true">
+            <column name="name" type="${stringType}(255)"/>
+        </loadData>
+    </changeSet>
+
+    <changeSet id="00000000000006" author="Kamali">
+        <createTable tableName="transactions">
+            <column name="id" type="${longType}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="date" type="${dateType}"/>
+            <column name="amount" type="${bigDecimalType}(10,4)"/>
+            <column name="description" type="${stringType}(255)"/>
+            <column name="category_id" type="${longType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="${longType}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint
+                baseTableName="transactions"
+                baseColumnNames="user_id"
+                constraintName="fk_transaction_user"
+                referencedTableName="my_user"
+                referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint
+                baseTableName="transactions"
+                baseColumnNames="category_id"
+                constraintName="fk_transaction_category"
+                referencedTableName="category"
+                referencedColumnNames="id"/>
+
+    </changeSet>
+
+    <changeSet id="00000000000007" author="Kamali">
+        <createTable tableName="budget">
+            <column name="id" type="${longType}" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="${stringType}(255)"/>
+            <column name="user_id" type="${longType}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint
+                baseTableName="budget"
+                baseColumnNames="user_id"
+                constraintName="fk_budget_user"
+                referencedTableName="my_user"
+                referencedColumnNames="id"/>
+    </changeSet>
+
 </databaseChangeLog>

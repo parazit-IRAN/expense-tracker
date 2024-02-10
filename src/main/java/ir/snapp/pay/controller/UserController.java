@@ -4,6 +4,7 @@ package ir.snapp.pay.controller;
 import ir.snapp.pay.constant.Constants;
 import ir.snapp.pay.dto.UserInputDto;
 import ir.snapp.pay.dto.UserOutputDto;
+import ir.snapp.pay.dto.UserSettingDto;
 import ir.snapp.pay.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -90,6 +91,19 @@ public class UserController extends BaseController {
 		log.debug("REST request to disable User: {}", email);
 		try {
 			return success(userService.activeUser(email));
+		} catch (Exception e) {
+			return failure(e);
+		}
+	}
+
+	@PutMapping(value = "/settings/{email}")
+	@PreAuthorize("hasAuthority(\"" + Constants.USER + "\")")
+	public ResponseEntity<UserOutputDto> updateUserSettings(@RequestBody UserSettingDto userSettingDto,
+															@Email(message = "email.must.be.valid") @Valid @PathVariable("email") String email) {
+		log.debug("REST request to update User settings by email {} to {}", email, userSettingDto);
+		try {
+			UserOutputDto userOutputDto = userService.updateUserSettings(email, userSettingDto);
+			return success(userOutputDto);
 		} catch (Exception e) {
 			return failure(e);
 		}

@@ -23,6 +23,8 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=test1234
       - POSTGRES_DB=snapp
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - snapp_pay_network
 

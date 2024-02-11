@@ -89,8 +89,8 @@ class AccountControllerTest extends AbstractRestControllerTest {
 
 
 		assertThat(transactionRepository.findAll().size(), is(2));
-		assertThat(categoryRepository.findAll().size(), is(1));
-		assertThat(accountRepository.findAll().size(), is(1));
+		assertThat(categoryRepository.findById(category.getId()).isPresent(), is(true));
+		assertThat(accountRepository.findById(cardAccount.getId()).isPresent(), is(true));
 
 		this.mockMvc
 				.perform(delete("/accounts/{id}", cardAccount.getId()))
@@ -98,8 +98,8 @@ class AccountControllerTest extends AbstractRestControllerTest {
 				.andExpect(content().string("Deleted Account id: " + cardAccount.getId()));
 
 		assertThat(transactionRepository.findAll().size(), is(0));
-		assertThat(categoryRepository.findAll().size(), is(1));
-		assertThat(accountRepository.findAll().size(), is(0));
+		assertThat(categoryRepository.findById(category.getId()).isPresent(), is(true));
+		assertThat(accountRepository.findById(cardAccount.getId()).isPresent(), is(false));
 
 	}
 

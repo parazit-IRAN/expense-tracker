@@ -11,7 +11,7 @@
             <column name="default_currency" type="${stringType}(10)"/>
             <column name="date_format" type="${stringType}(50)"/>
             <column name="first_day_of_week" type="${stringType}(10)"/>
-            <column name="first_day_of_month" type="${shortType}"/>
+            <column name="first_day_of_month" type="${integerType}"/>
         </addColumn>
     </changeSet>
 

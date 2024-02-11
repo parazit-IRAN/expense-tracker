@@ -59,15 +59,15 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
 	private List<Authority> authorities = new ArrayList<>();
 
 	@JsonManagedReference
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
 	private List<Transaction> transactions = new ArrayList<>();
 
 	@JsonManagedReference
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
 	private List<Category> categories = new ArrayList<>();
 
 	@JsonManagedReference
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
 	private List<Account> accounts = new ArrayList<>();
 
 	@Size(min = 2, max = 10)

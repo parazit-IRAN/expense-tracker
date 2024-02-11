@@ -21,6 +21,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -72,12 +74,18 @@ class CategoryControllerTest extends AbstractRestControllerTest {
 	@WithMockUser(username = EMAIL, password = PASSWORD, authorities = {Constants.USER})
 	void testDeleteCategory() throws Exception {
 		Category category = createCategory(user);
-		Transaction transaction = createTransaction(category, user);
+		Account cardAccount = createCardAccount(user);
+		Transaction transaction = createTransaction(category, user, cardAccount);
+
+		assertThat(transactionRepository.findAll().size(), is(1));
 
 		this.mockMvc
 				.perform(delete("/categories/{id}", category.getId()))
 				.andExpect(status().isOk())
 				.andExpect(content().string("Deleted Category id: " + category.getId()));
+
+		assertThat(transactionRepository.findAll().size(), is(0));
+		assertThat(categoryRepository.findById(category.getId()).isEmpty(), is(true));
 
 	}
 
@@ -88,9 +96,9 @@ class CategoryControllerTest extends AbstractRestControllerTest {
 		return categoryRepository.save(category);
 	}
 
-	private Transaction createTransaction(Category category, User user) {
+	private Transaction createTransaction(Category category, User user, Account account) {
 		Transaction transaction = new Transaction();
-		transaction.setAccount(createAccount(user));
+		transaction.setAccount(account);
 		transaction.setAmount(new BigDecimal(1000));
 		transaction.setCategory(category);
 		transaction.setUser(user);
@@ -99,7 +107,7 @@ class CategoryControllerTest extends AbstractRestControllerTest {
 		return transaction;
 	}
 
-	private Account createAccount(User user) {
+	private Account createCardAccount(User user) {
 		Account account = new Account();
 		account.setName("card");
 		account.setBalance(new BigDecimal(1000));

@@ -29,7 +29,7 @@ public class Category implements Serializable {
 	private String name;
 
 	@JsonManagedReference
-	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE)
 	private List<Transaction> transactions = new ArrayList<>();
 
 	@ManyToOne

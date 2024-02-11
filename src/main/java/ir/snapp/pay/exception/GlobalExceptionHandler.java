@@ -35,16 +35,6 @@ public class GlobalExceptionHandler {
 		return expenseRestResponse;
 	}
 
-//	@ExceptionHandler({TokenException.class})
-//	@ResponseStatus(HttpStatus.UNAUTHORIZED)
-//	public ExpenseRestResponse handleUnAuthentication(AuthenticationException ex) {
-//		log.error("un authentication {}", ex.getMessage(), ex);
-//		ExpenseRestResponse<Object> expenseRestResponse = new ExpenseRestResponse<>();
-//		expenseRestResponse.setErrorCode(ExpenseExceptionType.TOKEN_IS_NOT_VALID_EXCEPTION.getErrorCode());
-//		expenseRestResponse.setErrorMessage(List.of(ExpenseExceptionType.TOKEN_IS_NOT_VALID_EXCEPTION.getErrorMessage()));
-//		return expenseRestResponse;
-//	}
-
 	@ExceptionHandler({BindException.class})
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ExpenseRestResponse handleBindingException(BindException ex) {

@@ -79,7 +79,7 @@ class UserControllerTest extends AbstractRestControllerTest {
 	}
 
 	@Test
-	@WithMockUser(username = ADMIN_EMAIL, password = PASSWORD, authorities = {Constants.ADMIN})
+	@WithMockUser(username = ADMIN_EMAIL, password = PASSWORD, authorities = {Constants.ADMIN, Constants.USER})
 	void testUpdateUser() throws Exception {
 		createUser();
 		String USER_TEST_EMAIL = "test@test.com";
@@ -107,7 +107,7 @@ class UserControllerTest extends AbstractRestControllerTest {
 	}
 
 	@Test
-	@WithMockUser(username = ADMIN_EMAIL, password = PASSWORD, authorities = {Constants.ADMIN})
+	@WithMockUser(username = ADMIN_EMAIL, password = PASSWORD, authorities = {Constants.ADMIN, Constants.USER})
 	void testDeleteUser() throws Exception {
 		createUser();
 

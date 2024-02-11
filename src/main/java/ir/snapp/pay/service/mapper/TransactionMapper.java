@@ -9,7 +9,6 @@ import ir.snapp.pay.exception.ExpenseException;
 import ir.snapp.pay.exception.ExpenseExceptionType;
 import ir.snapp.pay.repository.AccountRepository;
 import ir.snapp.pay.repository.CategoryRepository;
-import ir.snapp.pay.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,20 +19,17 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class TransactionMapper {
 
-	private UserRepository userRepository;
 	private AccountRepository accountRepository;
 	private CategoryRepository categoryRepository;
 
 	public Transaction transactionInputDtoToTransaction(TransactionInputDto transactionInputDto) {
 		Transaction transaction = new Transaction();
 		transaction.setAmount(transactionInputDto.getAmount());
-		User user = userRepository.findById(transactionInputDto.getUserId())
-				.orElseThrow(new ExpenseException(ExpenseExceptionType.USER_NOT_FOUND_EXCEPTION));
-		transaction.setUser(user);
 		Account account = accountRepository.findById(transactionInputDto.getAccountId())
 				.orElseThrow(new ExpenseException(ExpenseExceptionType.ACCOUNT_NOT_FOUND_EXCEPTION));
 		transaction.setAccount(account);
-		Category category = categoryRepository.findById(transactionInputDto.getCategoryId()).orElseThrow(new ExpenseException(ExpenseExceptionType.CATEGORY_NOT_FOUND_EXCEPTION));
+		Category category = categoryRepository.findById(transactionInputDto.getCategoryId())
+				.orElseThrow(new ExpenseException(ExpenseExceptionType.CATEGORY_NOT_FOUND_EXCEPTION));
 		transaction.setCategory(category);
 		transaction.setDescription(transactionInputDto.getDescription());
 		transaction.setType(transactionInputDto.getType());
@@ -47,7 +43,7 @@ public class TransactionMapper {
 				.amount(transaction.getAmount())
 				.description(transaction.getDescription())
 				.category(getCategoryOutputDto(transaction.getCategory()))
-				.user(createUserOutputDto(transaction.getUser()))
+				.user(getUserOutputDto(transaction.getUser()))
 				.account(createAccountOutputDto(transaction.getAccount()))
 				.type(transaction.getType())
 				.build();
@@ -61,7 +57,7 @@ public class TransactionMapper {
 				.build();
 	}
 
-	private UserOutputDto createUserOutputDto(User user) {
+	private UserOutputDto getUserOutputDto(User user) {
 		return UserOutputDto.builder()
 				.id(user.getId())
 				.email(user.getEmail())

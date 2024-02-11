@@ -69,7 +69,6 @@ class TransactionControllerTest extends AbstractRestControllerTest {
 		BigDecimal AMOUNT = new BigDecimal(10.0);
 
 		TransactionInputDto transactionInputDto = TransactionInputDto.builder()
-				.userId(user.getId())
 				.accountId(account.getId())
 				.amount(AMOUNT)
 				.categoryId(category.getId())

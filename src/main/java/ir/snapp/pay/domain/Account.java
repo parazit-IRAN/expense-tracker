@@ -39,7 +39,7 @@ public class Account implements Serializable {
 	@Column(name = "description")
 	private String description;
 
-	@Column(name = "balance", scale = 4, precision = 10)
+	@Column(name = "balance", scale = 10, precision = 4)
 	private BigDecimal balance;
 
 	@ManyToOne

@@ -25,7 +25,7 @@ public class Transaction implements Serializable {
 	@Column(name = "date")
 	private Instant date = Instant.now();
 
-	@Column(name = "amount", scale = 4, precision = 10)
+	@Column(name = "amount", scale = 10, precision = 4)
 	private BigDecimal amount;
 
 	@Size(max = 255)

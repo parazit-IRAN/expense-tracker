@@ -59,7 +59,7 @@ public class AccountController extends BaseController {
 
 	@GetMapping(value = "/all")
 	@PreAuthorize("hasAuthority(\"" + Constants.USER + "\")")
-	@Operation(summary = "create all accounts for current user")
+	@Operation(summary = "get all accounts for current user")
 	public ResponseEntity<List<AccountOutputDto>> getAllAccount(Authentication authentication) {
 		log.debug("REST request to get all Account for User Email: {}", authentication.getName());
 		try {

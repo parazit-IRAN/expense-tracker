@@ -94,7 +94,6 @@
             <column name="id" type="${longType}" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="name" type="${stringType}(255)"/>
             <column name="amount" type="${bigDecimalType}(10,4)"/>
             <column name="user_id" type="${longType}">
                 <constraints nullable="false"/>

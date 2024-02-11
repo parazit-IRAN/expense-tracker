@@ -60,13 +60,11 @@ public class CategoryService {
 				.orElseThrow(new ExpenseException(ExpenseExceptionType.USER_NOT_FOUND_EXCEPTION));
 		Category category = categoryRepository.findByNameAndUserId("Salary", currentUser.getId())
 				.orElseThrow(new ExpenseException(ExpenseExceptionType.CATEGORY_NOT_FOUND_EXCEPTION));
-		List<TransactionSumByCategory> transactionSumByCategory =
-				categoryRepository.getTransactionSumByCategoryWithoutSalaryCategory(
+		return categoryRepository.getTransactionSumByCategoryWithoutSalaryCategory(
 						currentUser.getId(),
 						category.getId(),
 						GeneralUtil.convert(startDate),
 						GeneralUtil.convert(endDate));
-		return transactionSumByCategory;
 	}
 
 	@Transactional(readOnly = true)

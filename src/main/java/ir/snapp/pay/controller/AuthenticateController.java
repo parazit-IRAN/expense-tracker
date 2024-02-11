@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import ir.snapp.pay.configuration.security.jwt.TokenProvider;
 import ir.snapp.pay.dto.LoginDto;
+import ir.snapp.pay.dto.TokenOutputDto;
 import ir.snapp.pay.exception.ExpenseException;
 import ir.snapp.pay.exception.ExpenseExceptionType;
 import lombok.extern.slf4j.Slf4j;
@@ -39,21 +40,20 @@ public class AuthenticateController extends BaseController {
 
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	@Operation(summary = "create a token")
-	public ResponseEntity<String> getToken(@Valid @RequestBody LoginDto loginDTO) {
+	public ResponseEntity<TokenOutputDto> getToken(@Valid @RequestBody LoginDto loginDTO) {
 		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
 				loginDTO.getEmail(),
 				loginDTO.getPassword()
 		);
 
 		try {
-			String jwt = createToken(authenticationToken);
-			return success(jwt);
+			return success(createToken(authenticationToken));
 		} catch (Exception e) {
 			return failure(e);
 		}
 	}
 
-	private String createToken(UsernamePasswordAuthenticationToken authenticationToken) {
+	private TokenOutputDto createToken(UsernamePasswordAuthenticationToken authenticationToken) {
 		Authentication authentication;
 		try {
 			authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
@@ -61,6 +61,7 @@ public class AuthenticateController extends BaseController {
 			throw new ExpenseException(ExpenseExceptionType.USER_NOT_FOUND_EXCEPTION);
 		}
 		SecurityContextHolder.getContext().setAuthentication(authentication);
-		return this.tokenProvider.createToken(authentication);
+		String token = this.tokenProvider.createToken(authentication);
+		return TokenOutputDto.builder().token(token).build();
 	}
 }

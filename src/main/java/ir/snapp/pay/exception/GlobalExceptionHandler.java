@@ -4,6 +4,7 @@ package ir.snapp.pay.exception;
 import ir.snapp.pay.controller.ExpenseRestResponse;
 import ir.snapp.pay.util.ExceptionTranslatorUtil;
 import ir.snapp.pay.util.GeneralUtil;
+import ir.snapp.pay.util.MessageTranslatorUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.postgresql.util.PSQLException;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.validation.ConstraintViolationException;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @Slf4j
@@ -72,6 +74,16 @@ public class GlobalExceptionHandler {
 		ExpenseRestResponse<Object> expenseRestResponse = new ExpenseRestResponse<>();
 		expenseRestResponse.setErrorCode(3003);
 		expenseRestResponse.setErrorMessage(ExceptionTranslatorUtil.findCause(ex));
+		return expenseRestResponse;
+	}
+
+	@ExceptionHandler({DateTimeParseException.class})
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ExpenseRestResponse handleDateTimeParseException(DateTimeParseException ex) {
+		log.error("received invalid parameter {}", ex.getMessage(), ex);
+		ExpenseRestResponse<Object> expenseRestResponse = new ExpenseRestResponse<>();
+		expenseRestResponse.setErrorCode(3004);
+		expenseRestResponse.setErrorMessage(List.of(MessageTranslatorUtil.getText("date.time.is.not.correct.format")));
 		return expenseRestResponse;
 	}
 

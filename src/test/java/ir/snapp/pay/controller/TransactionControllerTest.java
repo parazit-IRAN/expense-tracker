@@ -104,15 +104,15 @@ class TransactionControllerTest extends AbstractRestControllerTest {
 	@WithMockUser(username = EMAIL, password = PASSWORD, authorities = {Constants.USER})
 	void testGetAllTransactionByPaging() throws Exception {
 		Account account = createAccount(user);
-		Transaction transaction = createTransaction(account);
-		Transaction transaction_1 = createTransaction(account);
-		Transaction transaction_2 = createTransaction(account);
-		Transaction transaction_3 = createTransaction(account);
-		Transaction transaction_4 = createTransaction(account);
-		Transaction transaction_5 = createTransaction(account);
+		createTransaction(account);
+		createTransaction(account);
+		createTransaction(account);
+		createTransaction(account);
+		createTransaction(account);
+		createTransaction(account);
 
 		this.mockMvc
-				.perform(get("/transactions/reports/all-transaction-by-user").param("page", "0").param("size", "2"))
+				.perform(get("/transactions/all").param("page", "0").param("size", "2"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
 				.andExpect(jsonPath("$.totalElements").value(6))

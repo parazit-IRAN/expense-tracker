@@ -57,7 +57,7 @@ public class TransactionController extends BaseController {
 		}
 	}
 
-	@GetMapping(value = "/reports/all-transaction-by-user")
+	@GetMapping(value = "/all")
 	@PreAuthorize("hasAuthority(\"" + Constants.USER + "\")")
 	@Operation(summary = "get all transaction for current user")
 	public ResponseEntity<Page<TransactionOutputDto>> getAllTransactionByUserId(Authentication authentication,

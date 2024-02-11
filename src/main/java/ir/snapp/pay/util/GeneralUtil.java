@@ -5,6 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.validation.BindingResult;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -25,5 +28,9 @@ public class GeneralUtil {
 					return MessageTranslatorUtil.getText(br.getDefaultMessage(), args.toArray(new Object[0]));
 				})
 				.collect(Collectors.toList());
+	}
+
+	public static Instant convert(LocalDate localDate) {
+		return localDate.atStartOfDay(ZoneId.systemDefault()).toInstant();
 	}
 }

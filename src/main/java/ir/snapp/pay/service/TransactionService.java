@@ -21,8 +21,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 
 @Slf4j
 @Service
@@ -49,7 +47,7 @@ public class TransactionService {
 	private void isValidTransaction(Transaction transaction, User user) {
 		Category category = categoryRepository.findByNameAndUserId("Salary", user.getId())
 				.orElseThrow(new ExpenseException(ExpenseExceptionType.CATEGORY_NOT_FOUND_EXCEPTION));
-		if (transaction.getType().equals(TransactionType.INCOME) && transaction.getCategory().getId() != category.getId()) {
+		if (transaction.getType().equals(TransactionType.EXPENSE) && transaction.getCategory().getId().equals(category.getId())) {
 			throw new ExpenseException(ExpenseExceptionType.TRANSACTION_IS_NOT_VALID_EXCEPTION);
 		}
 	}
@@ -64,6 +62,7 @@ public class TransactionService {
 		log.debug("Deleted Transaction: {}", transaction);
 	}
 
+	@Transactional(readOnly = true)
 	public Page<TransactionOutputDto> getAllTransaction(String userEmail, PageRequest pageRequest) {
 		User currentUser = userRepository.findOneByEmailIgnoreCase(userEmail)
 				.orElseThrow(new ExpenseException(ExpenseExceptionType.USER_NOT_FOUND_EXCEPTION));

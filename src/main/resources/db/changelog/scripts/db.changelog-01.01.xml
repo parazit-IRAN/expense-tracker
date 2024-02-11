@@ -22,6 +22,7 @@
             <column name="password_hash" type="${stringType}(60)"/>
             <column name="first_name" type="${stringType}(50)"/>
             <column name="last_name" type="${stringType}(50)"/>
+            <column name="language" type="${stringType}(10)"/>
             <column name="email" type="${stringType}(191)">
                 <constraints unique="true" nullable="false" uniqueConstraintName="user_email"/>
             </column>

@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.time.DayOfWeek;
 import java.util.List;
 
 @Data
@@ -23,9 +22,6 @@ public class UserOutputDto implements Serializable {
 	private String email;
 	private Boolean isActivated;
 	private String language;
-	private String defaultCurrency;
-	private String dateFormat;
-	private DayOfWeek firstDayOfWeek;
 	private Integer firstDayOfMonth;
 	private List<String> authorities;
 }

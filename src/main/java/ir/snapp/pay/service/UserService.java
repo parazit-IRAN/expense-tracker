@@ -9,10 +9,8 @@ import ir.snapp.pay.dto.UserSettingDto;
 import ir.snapp.pay.exception.ExpenseException;
 import ir.snapp.pay.exception.ExpenseExceptionType;
 import ir.snapp.pay.repository.AuthorityRepository;
-import ir.snapp.pay.repository.CategoryRepository;
 import ir.snapp.pay.repository.UserRepository;
 import ir.snapp.pay.service.mapper.UserMapper;
-import ir.snapp.pay.util.SecurityUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -20,7 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.DayOfWeek;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -156,18 +153,6 @@ public class UserService {
 				.orElseThrow(new ExpenseException(ExpenseExceptionType.USER_NOT_FOUND_EXCEPTION));
 		if (StringUtils.isNotEmpty(userSettingDto.getLanguage())) {
 			existUser.setLanguage(userSettingDto.getLanguage());
-		}
-		if (StringUtils.isNotEmpty(userSettingDto.getDateFormat())) {
-			existUser.setDateFormat(userSettingDto.getDateFormat());
-		}
-		if (StringUtils.isNotEmpty(userSettingDto.getDefaultCurrency())) {
-			existUser.setDefaultCurrency(userSettingDto.getDefaultCurrency());
-		}
-		if (StringUtils.isNotEmpty(userSettingDto.getFirstDayOfWeek())) {
-			existUser.setFirstDayOfWeek(DayOfWeek.valueOf(userSettingDto.getFirstDayOfWeek()));
-		}
-		if (StringUtils.isNotEmpty(userSettingDto.getFirstDayOfMonth())) {
-			existUser.setFirstDayOfMonth(Integer.valueOf(userSettingDto.getFirstDayOfMonth()));
 		}
 		userRepository.save(existUser);
 		log.debug("Updated settings for an user: {}", existUser);

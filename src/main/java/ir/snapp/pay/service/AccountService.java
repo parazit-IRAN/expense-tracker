@@ -41,11 +41,12 @@ public class AccountService {
 		User currentUser = userRepository.findOneByEmailIgnoreCase(userEmail)
 				.orElseThrow(new ExpenseException(ExpenseExceptionType.USER_NOT_FOUND_EXCEPTION));
 		Account account = accountRepository.findByIdAndUserId(accountId, currentUser.getId())
-				.orElseThrow(new ExpenseException(ExpenseExceptionType.TRANSACTION_NOT_FOUND_EXCEPTION));
+				.orElseThrow(new ExpenseException(ExpenseExceptionType.ACCOUNT_NOT_FOUND_EXCEPTION));
 		accountRepository.delete(account);
 		log.debug("Deleted Account: {}", account);
 	}
 
+	@Transactional(readOnly = true)
 	public List<AccountOutputDto> getAllAccount(String userEmail) {
 		User currentUser = userRepository.findOneByEmailIgnoreCase(userEmail)
 				.orElseThrow(new ExpenseException(ExpenseExceptionType.USER_NOT_FOUND_EXCEPTION));

@@ -5,31 +5,6 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.10.xsd">
 
-    <changeSet id="00000000000002" author="kamali">
-        <addColumn tableName="my_user">
-            <column name="language" type="${stringType}(10)"/>
-            <column name="default_currency" type="${stringType}(10)"/>
-            <column name="date_format" type="${stringType}(50)"/>
-            <column name="first_day_of_week" type="${stringType}(10)"/>
-            <column name="first_day_of_month" type="${integerType}"/>
-        </addColumn>
-    </changeSet>
-
-    <changeSet id="00000000000003" author="Kamali">
-        <loadUpdateData
-                file="db/changelog/data/update_user.csv"
-                separator=";"
-                tableName="my_user"
-                primaryKey="id">
-            <column name="id" type="${longType}"/>
-            <column name="language" type="${stringType}(10)"/>
-            <column name="default_currency" type="${stringType}(10)"/>
-            <column name="date_format" type="${stringType}(50)"/>
-            <column name="first_day_of_week" type="${stringType}(10)"/>
-            <column name="first_day_of_month" type="${integerType}"/>
-        </loadUpdateData>
-    </changeSet>
-
     <changeSet id="00000000000004" author="Kamali">
         <createTable tableName="category">
             <column name="id" type="${longType}" autoIncrement="true">

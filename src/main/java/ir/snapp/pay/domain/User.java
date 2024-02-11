@@ -3,18 +3,13 @@ package ir.snapp.pay.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
-import lombok.ToString;
-import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.time.DayOfWeek;
-import java.time.MonthDay;
 import java.util.ArrayList;
-import java.util.Currency;
 import java.util.List;
 
 @Data
@@ -73,16 +68,4 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
 	@Size(min = 2, max = 10)
 	@Column(name = "language", length = 10)
 	private String language = "en";
-	@Size(min = 2, max = 10)
-	@Column(name = "default_currency", length = 10)
-	private String defaultCurrency = "USD";
-	@Size(min = 8, max = 50)
-	@Column(name = "date_format", length = 50)
-	private String dateFormat = "dd/MM/yyyy";
-	@Column(name = "first_day_of_week")
-	@Enumerated(EnumType.STRING)
-	private DayOfWeek firstDayOfWeek = DayOfWeek.SATURDAY;
-	@Range(min = 1, max = 3)
-	@Column(name = "first_day_of_month", length = 3)
-	private Integer firstDayOfMonth = 1 ;
 }

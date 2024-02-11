@@ -23,10 +23,6 @@ public class UserMapper {
 				.isActivated(user.isActivated())
 				.authorities(user.getAuthorities().stream().map(Authority::getName).collect(Collectors.toList()))
 				.language(user.getLanguage())
-				.defaultCurrency(user.getDefaultCurrency())
-				.dateFormat(user.getDateFormat())
-				.firstDayOfWeek(user.getFirstDayOfWeek())
-				.firstDayOfMonth(user.getFirstDayOfMonth())
 				.build();
 	}
 

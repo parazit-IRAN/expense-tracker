@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -25,6 +26,10 @@ public class CategoryMapper {
 				.userOutputDto(createUserOutputDto(category.getUser()))
 				.transactions(createTransactionOutputDtos(category.getTransactions()))
 				.build();
+	}
+
+	public List<CategoryOutputDto> categoryToCategoryOutputDto(List<Category> categories) {
+		return categories.stream().map(this::categoryToCategoryOutputDto).collect(Collectors.toList());
 	}
 
 	private UserOutputDto createUserOutputDto(User user) {

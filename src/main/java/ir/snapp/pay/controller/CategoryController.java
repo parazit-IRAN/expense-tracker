@@ -28,7 +28,7 @@ public class CategoryController extends BaseController {
 
 	@PostMapping
 	@PreAuthorize("hasAuthority(\"" + Constants.USER + "\")")
-	public ResponseEntity<UserOutputDto> createCategory(@Valid @RequestBody CategoryInputDto categoryInputDto,
+	public ResponseEntity<CategoryOutputDto> createCategory(@Valid @RequestBody CategoryInputDto categoryInputDto,
 														Authentication authentication) {
 		log.debug("REST request to save Category : {}, User Email: {}", categoryInputDto, authentication.getName());
 		try {

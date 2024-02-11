@@ -48,6 +48,6 @@ public class Account implements Serializable {
 	private User user;
 
 	@JsonManagedReference
-	@OneToMany(mappedBy = "account")
+	@OneToMany(mappedBy = "account", cascade = CascadeType.REMOVE)
 	private List<Transaction> transactions = new ArrayList<>();
 }

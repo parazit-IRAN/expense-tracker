@@ -26,7 +26,7 @@ public class TransactionController extends BaseController {
 
 	@PostMapping
 	@PreAuthorize("hasAuthority(\"" + Constants.USER + "\")")
-	public ResponseEntity<UserOutputDto> createTransaction(@Valid @RequestBody TransactionInputDto transactionInputDto,
+	public ResponseEntity<TransactionOutputDto> createTransaction(@Valid @RequestBody TransactionInputDto transactionInputDto,
 														   Authentication authentication) {
 		log.debug("REST request to save Transaction : {}, User Email: {}", transactionInputDto, authentication.getName());
 		try {
@@ -39,7 +39,7 @@ public class TransactionController extends BaseController {
 
 	@DeleteMapping(value = "/{id}")
 	@PreAuthorize("hasAuthority(\"" + Constants.USER + "\")")
-	public ResponseEntity<String> deleteUser(@Valid @PathVariable("id") Long transactionId, Authentication authentication) {
+	public ResponseEntity<String> deleteTransaction(@Valid @PathVariable("id") Long transactionId, Authentication authentication) {
 		log.debug("REST request to delete Transaction id :{}, user email: {}", transactionId, authentication.getName());
 		try {
 			transactionService.deleteTransaction(transactionId, authentication.getName());

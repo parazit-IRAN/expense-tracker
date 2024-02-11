@@ -15,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @AllArgsConstructor
@@ -42,5 +44,12 @@ public class AccountService {
 				.orElseThrow(new ExpenseException(ExpenseExceptionType.TRANSACTION_NOT_FOUND_EXCEPTION));
 		accountRepository.delete(account);
 		log.debug("Deleted Account: {}", account);
+	}
+
+	public List<AccountOutputDto> getAllAccount(String userEmail) {
+		User currentUser = userRepository.findOneByEmailIgnoreCase(userEmail)
+				.orElseThrow(new ExpenseException(ExpenseExceptionType.USER_NOT_FOUND_EXCEPTION));
+		List<Account> accounts = accountRepository.findAllByUserId(currentUser.getId());
+		return accountMapper.accountToAccountOutputDto(accounts);
 	}
 }

@@ -1,8 +1,11 @@
 package ir.snapp.pay.dto;
 
 
+import ir.snapp.pay.constant.AccountType;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotEmpty;
@@ -12,6 +15,8 @@ import java.math.BigDecimal;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class AccountInputDto implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -19,8 +24,7 @@ public class AccountInputDto implements Serializable {
 	@NotEmpty(message = "name.must.not.be.empty")
 	private String name;
 	@NotNull(message = "type.must.not.be.null")
-	@NotEmpty(message = "type.must.not.be.empty")
-	private String type;
+	private AccountType type;
 	@NotNull(message = "currency.must.not.be.null")
 	@NotEmpty(message = "currency.must.not.be.empty")
 	private String currency;

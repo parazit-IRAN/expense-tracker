@@ -1,6 +1,9 @@
 package ir.snapp.pay.controller;
 
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import ir.snapp.pay.constant.Constants;
 import ir.snapp.pay.dto.UserInputDto;
 import ir.snapp.pay.dto.UserOutputDto;
@@ -22,12 +25,13 @@ import javax.validation.constraints.Email;
 @AllArgsConstructor
 @Validated
 @RequestMapping("/users")
+@Tag(name = "User", description = "The User API. Contains all the operations that can be performed on a user.")
 public class UserController extends BaseController {
 
 	private final UserService userService;
 
 	@PostMapping
-	@PreAuthorize("hasAuthority(\"" + Constants.ADMIN + "\")")
+	@Operation(summary = "create a user")
 	public ResponseEntity<UserOutputDto> createUser(@Valid @RequestBody UserInputDto userInputDto) {
 		log.debug("REST request to save User : {}", userInputDto);
 		try {
@@ -40,6 +44,8 @@ public class UserController extends BaseController {
 
 	@GetMapping(value = "/{email}")
 	@PreAuthorize("hasAuthority(\"" + Constants.USER + "\")")
+	@SecurityRequirement(name = "Bearer Authentication")
+	@Operation(summary = "get an user")
 	public ResponseEntity<UserOutputDto> getUser(@Email(message = "email.must.be.valid") @Valid @PathVariable("email") String email) {
 		log.debug("REST request to get User: {}", email);
 		try {
@@ -50,7 +56,9 @@ public class UserController extends BaseController {
 	}
 
 	@PutMapping(value = "/{email}")
-	@PreAuthorize("hasAuthority(\"" + Constants.ADMIN + "\")")
+	@PreAuthorize("hasAuthority(\"" + Constants.USER + "\")")
+	@SecurityRequirement(name = "Bearer Authentication")
+	@Operation(summary = "update user fields")
 	public ResponseEntity<UserOutputDto> updateUser(@Valid @RequestBody UserInputDto userInputDto,
 													@Email(message = "email.must.be.valid") @Valid @PathVariable("email") String email) {
 		log.debug("REST request to update User email {} to {}", email, userInputDto);
@@ -63,7 +71,9 @@ public class UserController extends BaseController {
 	}
 
 	@DeleteMapping(value = "/{email}")
-	@PreAuthorize("hasAuthority(\"" + Constants.ADMIN + "\") and (!authentication.principal.equals(#email))")
+	@PreAuthorize("hasAuthority(\"" + Constants.USER + "\") and (!authentication.principal.equals(#email))")
+	@SecurityRequirement(name = "Bearer Authentication")
+	@Operation(summary = "delete user, you can not remove yourself")
 	public ResponseEntity<String> deleteUser(@Email(message = "email.must.be.valid") @Valid @PathVariable("email") String email) {
 		log.debug("REST request to delete User: {}", email);
 		try {
@@ -76,6 +86,8 @@ public class UserController extends BaseController {
 
 	@GetMapping(value = "/deactivate/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAuthority(\"" + Constants.ADMIN + "\")")
+	@SecurityRequirement(name = "Bearer Authentication")
+	@Operation(summary = "de active user by admin permission")
 	public ResponseEntity<UserOutputDto> deactivateUser(@Email(message = "email.must.be.valid") @Valid @PathVariable("email") String email) {
 		log.debug("REST request to disable User: {}", email);
 		try {
@@ -87,6 +99,8 @@ public class UserController extends BaseController {
 
 	@GetMapping(value = "/activate/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAuthority(\"" + Constants.ADMIN + "\")")
+	@SecurityRequirement(name = "Bearer Authentication")
+	@Operation(summary = "active user by admin permission")
 	public ResponseEntity<UserOutputDto> activeUser(@Email(message = "email.must.be.valid") @Valid @PathVariable("email") String email) {
 		log.debug("REST request to disable User: {}", email);
 		try {
@@ -98,6 +112,8 @@ public class UserController extends BaseController {
 
 	@PutMapping(value = "/settings/{email}")
 	@PreAuthorize("hasAuthority(\"" + Constants.USER + "\")")
+	@SecurityRequirement(name = "Bearer Authentication")
+	@Operation(summary = "update user settings")
 	public ResponseEntity<UserOutputDto> updateUserSettings(@RequestBody UserSettingDto userSettingDto,
 															@Email(message = "email.must.be.valid") @Valid @PathVariable("email") String email) {
 		log.debug("REST request to update User settings by email {} to {}", email, userSettingDto);

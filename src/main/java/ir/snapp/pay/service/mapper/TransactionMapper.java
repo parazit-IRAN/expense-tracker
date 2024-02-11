@@ -1,6 +1,5 @@
 package ir.snapp.pay.service.mapper;
 
-import ir.snapp.pay.constant.TransactionType;
 import ir.snapp.pay.domain.Account;
 import ir.snapp.pay.domain.Category;
 import ir.snapp.pay.domain.Transaction;
@@ -37,7 +36,7 @@ public class TransactionMapper {
 		Category category = categoryRepository.findById(transactionInputDto.getCategoryId()).orElseThrow(new ExpenseException(ExpenseExceptionType.CATEGORY_NOT_FOUND_EXCEPTION));
 		transaction.setCategory(category);
 		transaction.setDescription(transactionInputDto.getDescription());
-		transaction.setType(TransactionType.valueOf(transactionInputDto.getType()));
+		transaction.setType(transactionInputDto.getType());
 		return transaction;
 	}
 
@@ -50,7 +49,7 @@ public class TransactionMapper {
 				.category(getCategoryOutputDto(transaction.getCategory()))
 				.user(createUserOutputDto(transaction.getUser()))
 				.account(createAccountOutputDto(transaction.getAccount()))
-				.type(transaction.getType().name())
+				.type(transaction.getType())
 				.build();
 	}
 
@@ -58,7 +57,7 @@ public class TransactionMapper {
 		return AccountOutputDto.builder()
 				.id(account.getId())
 				.name(account.getName())
-				.type(account.getType().name())
+				.type(account.getType())
 				.build();
 	}
 

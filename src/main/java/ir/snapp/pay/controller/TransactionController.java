@@ -1,6 +1,9 @@
 package ir.snapp.pay.controller;
 
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import ir.snapp.pay.constant.Constants;
 import ir.snapp.pay.dto.TransactionInputDto;
 import ir.snapp.pay.dto.TransactionOutputDto;
@@ -16,18 +19,20 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Slf4j
 @RestController
 @AllArgsConstructor
 @RequestMapping("/transactions")
+@SecurityRequirement(name = "Bearer Authentication")
+@Tag(name = "Transaction", description = "The Transaction API. Contains all the operations that can be performed on a transaction.")
 public class TransactionController extends BaseController {
 
 	private final TransactionService transactionService;
 
 	@PostMapping
 	@PreAuthorize("hasAuthority(\"" + Constants.USER + "\")")
+	@Operation(summary = "create a transaction")
 	public ResponseEntity<TransactionOutputDto> createTransaction(@Valid @RequestBody TransactionInputDto transactionInputDto,
 																  Authentication authentication) {
 		log.debug("REST request to save Transaction : {}, User Email: {}", transactionInputDto, authentication.getName());
@@ -41,6 +46,7 @@ public class TransactionController extends BaseController {
 
 	@DeleteMapping(value = "/{id}")
 	@PreAuthorize("hasAuthority(\"" + Constants.USER + "\")")
+	@Operation(summary = "delete a transaction")
 	public ResponseEntity<String> deleteTransaction(@Valid @PathVariable("id") Long transactionId, Authentication authentication) {
 		log.debug("REST request to delete Transaction id :{}, user email: {}", transactionId, authentication.getName());
 		try {
@@ -53,6 +59,7 @@ public class TransactionController extends BaseController {
 
 	@GetMapping(value = "/reports/all-transaction-by-user")
 	@PreAuthorize("hasAuthority(\"" + Constants.USER + "\")")
+	@Operation(summary = "get all transaction for current user")
 	public ResponseEntity<Page<TransactionOutputDto>> getAllTransactionByUserId(Authentication authentication,
 																				@RequestParam(required = false) Integer size,
 																				@RequestParam(required = false) Integer page,

@@ -1,6 +1,8 @@
 package ir.snapp.pay.controller;
 
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import ir.snapp.pay.configuration.security.jwt.TokenProvider;
 import ir.snapp.pay.dto.LoginDto;
 import ir.snapp.pay.exception.ExpenseException;
@@ -23,6 +25,7 @@ import javax.validation.Valid;
 @Slf4j
 @RestController
 @RequestMapping("/authenticate")
+@Tag(name = "Authenticate", description = "The Authenticate API. Its provides to get a token.")
 public class AuthenticateController extends BaseController {
 	private final AuthenticationManagerBuilder authenticationManagerBuilder;
 	private final TokenProvider tokenProvider;
@@ -35,6 +38,7 @@ public class AuthenticateController extends BaseController {
 	}
 
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	@Operation(summary = "create a token")
 	public ResponseEntity<String> getToken(@Valid @RequestBody LoginDto loginDTO) {
 		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
 				loginDTO.getEmail(),

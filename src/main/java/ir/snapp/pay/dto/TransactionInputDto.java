@@ -1,18 +1,21 @@
 package ir.snapp.pay.dto;
 
 
+import ir.snapp.pay.constant.TransactionType;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class TransactionInputDto implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -24,8 +27,7 @@ public class TransactionInputDto implements Serializable {
 	private String description;
 
 	@NotNull(message = "type.must.not.be.null")
-	@NotEmpty(message = "type.must.not.be.empty")
-	private String type;
+	private TransactionType type;
 
 	@NotNull(message = "categoryId.must.not.be.null")
 	@Range(min = 1, max = Integer.MAX_VALUE - 1, message = "categoryId.size.must.be.between.val1.and.val2")

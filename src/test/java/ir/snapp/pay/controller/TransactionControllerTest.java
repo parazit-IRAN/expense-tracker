@@ -73,7 +73,7 @@ class TransactionControllerTest extends AbstractRestControllerTest {
 				.accountId(account.getId())
 				.amount(AMOUNT)
 				.categoryId(category.getId())
-				.type("EXPENSE")
+				.type(TransactionType.EXPENSE)
 				.build();
 
 

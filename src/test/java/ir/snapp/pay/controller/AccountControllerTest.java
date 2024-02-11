@@ -64,7 +64,7 @@ class AccountControllerTest extends AbstractRestControllerTest {
 	void testCreateAccount() throws Exception {
 
 		String accountName = "account_name";
-		String type = AccountType.CARD.name();
+		AccountType type = AccountType.CARD;
 		BigDecimal balance = new BigDecimal(1000);
 		String currency = "USD";
 		AccountInputDto accountInputDto = createAccountInputDto(accountName, type, balance, currency);
@@ -74,7 +74,7 @@ class AccountControllerTest extends AbstractRestControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
 				.andExpect(jsonPath("$.name").value(accountName))
-				.andExpect(jsonPath("$.type").value(type))
+				.andExpect(jsonPath("$.type").value(type.name()))
 				.andExpect(jsonPath("$.balance").value(balance))
 				.andExpect(jsonPath("$.currency").value(currency));
 	}
@@ -112,7 +112,7 @@ class AccountControllerTest extends AbstractRestControllerTest {
 		return categoryRepository.save(category);
 	}
 
-	private static AccountInputDto createAccountInputDto(String accountName, String type, BigDecimal balance, String currency) {
+	private static AccountInputDto createAccountInputDto(String accountName, AccountType type, BigDecimal balance, String currency) {
 		return AccountInputDto.builder()
 				.name(accountName)
 				.type(type)

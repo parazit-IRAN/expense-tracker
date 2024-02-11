@@ -15,6 +15,9 @@ import ir.snapp.pay.repository.UserRepository;
 import ir.snapp.pay.service.mapper.TransactionMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,10 +64,13 @@ public class TransactionService {
 		log.debug("Deleted Transaction: {}", transaction);
 	}
 
-	public List<TransactionOutputDto> getAllTransaction(String userEmail) {
+	public Page<TransactionOutputDto> getAllTransaction(String userEmail, PageRequest pageRequest) {
 		User currentUser = userRepository.findOneByEmailIgnoreCase(userEmail)
 				.orElseThrow(new ExpenseException(ExpenseExceptionType.USER_NOT_FOUND_EXCEPTION));
-		List<Transaction> transactions = transactionRepository.findAllByUserId(currentUser.getId());
-		return transactionMapper.transactionToTransactionOutputDto(transactions);
+		Page<Transaction> transactions = transactionRepository.findAllByUserId(currentUser.getId(), pageRequest);
+		return new PageImpl(transactionMapper.transactionToTransactionOutputDto(
+				transactions.getContent()),
+				pageRequest,
+				transactions.getTotalElements());
 	}
 }

@@ -22,8 +22,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
@@ -91,7 +90,8 @@ class TransactionControllerTest extends AbstractRestControllerTest {
 	@Test
 	@WithMockUser(username = EMAIL, password = PASSWORD, authorities = {Constants.USER})
 	void testDeleteTransaction() throws Exception {
-		Transaction transaction = createTransaction();
+		Account account = createAccount(user);
+		Transaction transaction = createTransaction(account);
 
 		this.mockMvc
 				.perform(delete("/transactions/{id}", transaction.getId()))
@@ -99,9 +99,32 @@ class TransactionControllerTest extends AbstractRestControllerTest {
 				.andExpect(content().string("Deleted Transaction id: " + transaction.getId()));
 	}
 
-	private Transaction createTransaction() {
+
+	@Test
+	@WithMockUser(username = EMAIL, password = PASSWORD, authorities = {Constants.USER})
+	void testGetAllTransactionByPaging() throws Exception {
+		Account account = createAccount(user);
+		Transaction transaction = createTransaction(account);
+		Transaction transaction_1 = createTransaction(account);
+		Transaction transaction_2 = createTransaction(account);
+		Transaction transaction_3 = createTransaction(account);
+		Transaction transaction_4 = createTransaction(account);
+		Transaction transaction_5 = createTransaction(account);
+
+		this.mockMvc
+				.perform(get("/transactions/reports/all-transaction-by-user").param("page", "0").param("size", "2"))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(jsonPath("$.totalElements").value(6))
+				.andExpect(jsonPath("$.size").value(2))
+				.andExpect(jsonPath("$.last").value(false))
+				.andExpect(jsonPath("$.totalPages").value(3));
+
+	}
+
+	private Transaction createTransaction(Account account) {
 		Transaction transaction = new Transaction();
-		transaction.setAccount(createAccount(user));
+		transaction.setAccount(account);
 		transaction.setAmount(new BigDecimal(1000));
 		transaction.setCategory(createCategory("Transport", user));
 		transaction.setUser(user);

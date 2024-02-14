@@ -6,16 +6,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import ir.snapp.pay.configuration.security.jwt.TokenProvider;
 import ir.snapp.pay.dto.LoginDto;
 import ir.snapp.pay.dto.TokenOutputDto;
-import ir.snapp.pay.exception.ExpenseException;
-import ir.snapp.pay.exception.ExpenseExceptionType;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,13 +22,9 @@ import javax.validation.Valid;
 @RequestMapping("/authenticate")
 @Tag(name = "Authenticate", description = "The Authenticate API. Its provides to get a token.")
 public class AuthenticateController extends BaseController {
-	private final AuthenticationManagerBuilder authenticationManagerBuilder;
 	private final TokenProvider tokenProvider;
-	@Value("${app.jwt.token-validity-in-seconds}")
-	private long tokenValidityInSeconds;
 
-	public AuthenticateController(AuthenticationManagerBuilder authenticationManagerBuilder, TokenProvider tokenProvider) {
-		this.authenticationManagerBuilder = authenticationManagerBuilder;
+	public AuthenticateController(TokenProvider tokenProvider) {
 		this.tokenProvider = tokenProvider;
 	}
 
@@ -47,21 +37,9 @@ public class AuthenticateController extends BaseController {
 		);
 
 		try {
-			return success(createToken(authenticationToken));
+			return success(tokenProvider.createToken(authenticationToken));
 		} catch (Exception e) {
 			return failure(e);
 		}
-	}
-
-	private TokenOutputDto createToken(UsernamePasswordAuthenticationToken authenticationToken) {
-		Authentication authentication;
-		try {
-			authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-		} catch (Exception e) {
-			throw new ExpenseException(ExpenseExceptionType.USER_NOT_FOUND_EXCEPTION);
-		}
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-		String token = this.tokenProvider.createToken(authentication);
-		return TokenOutputDto.builder().token(token).build();
 	}
 }

@@ -3,14 +3,17 @@ package ir.snapp.pay.configuration.security.jwt;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import ir.snapp.pay.dto.TokenOutputDto;
 import ir.snapp.pay.exception.ExpenseException;
 import ir.snapp.pay.exception.ExpenseExceptionType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
@@ -25,12 +28,17 @@ import java.util.stream.Collectors;
 @Component
 public class TokenProvider {
 	private static final String AUTHORITIES_KEY = "auth";
+	private final AuthenticationManagerBuilder authenticationManagerBuilder;
 	private Key key;
 	private JwtParser jwtParser;
 	@Value("${app.jwt.secret}")
 	private String secret;
 	@Value("${app.jwt.token-validity-in-seconds}")
 	private long tokenValidityInMilliseconds;
+
+	public TokenProvider(AuthenticationManagerBuilder authenticationManagerBuilder) {
+		this.authenticationManagerBuilder = authenticationManagerBuilder;
+	}
 
 
 	@PostConstruct
@@ -40,7 +48,20 @@ public class TokenProvider {
 		this.jwtParser = Jwts.parserBuilder().setSigningKey(key).build();
 	}
 
-	public String createToken(Authentication authentication) {
+
+	public TokenOutputDto createToken(UsernamePasswordAuthenticationToken authenticationToken) {
+		Authentication authentication;
+		try {
+			authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+		} catch (Exception e) {
+			throw new ExpenseException(ExpenseExceptionType.USER_NOT_FOUND_EXCEPTION);
+		}
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+		String token = this.createToken(authentication);
+		return TokenOutputDto.builder().token(token).build();
+	}
+
+	private String createToken(Authentication authentication) {
 		String authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
 
 		long now = (new Date()).getTime();

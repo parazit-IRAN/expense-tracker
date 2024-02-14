@@ -12,6 +12,9 @@ import ir.snapp.pay.repository.UserRepository;
 import ir.snapp.pay.service.mapper.BudgetMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,10 +57,13 @@ public class BudgetService {
 
 
 	@Transactional(readOnly = true)
-	public List<BudgetOutputDto> getAllBudget(String userEmail) {
+	public Page<BudgetOutputDto> getAllBudget(String userEmail, PageRequest pageRequest) {
 		User currentUser = userRepository.findOneByEmailIgnoreCase(userEmail)
 				.orElseThrow(new ExpenseException(ExpenseExceptionType.BUDGET_NOT_FOUND_EXCEPTION));
-		List<Budget> budgets = budgetRepository.findAllByUserId(currentUser.getId());
-		return budgetMapper.budgetToBudgetOutputDto(budgets);
+		Page<Budget> budgets = budgetRepository.findAllByUserId(currentUser.getId(), pageRequest);
+		return new PageImpl(budgetMapper.budgetToBudgetOutputDto(
+				budgets.getContent()),
+				pageRequest,
+				budgets.getTotalElements());
 	}
 }

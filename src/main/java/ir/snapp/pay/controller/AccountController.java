@@ -7,16 +7,18 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import ir.snapp.pay.constant.Constants;
 import ir.snapp.pay.dto.AccountInputDto;
 import ir.snapp.pay.dto.AccountOutputDto;
+import ir.snapp.pay.filter.PageRequestBuilder;
 import ir.snapp.pay.service.AccountService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -60,10 +62,14 @@ public class AccountController extends BaseController {
 	@GetMapping(value = "/all")
 	@PreAuthorize("hasAuthority(\"" + Constants.USER + "\")")
 	@Operation(summary = "get all accounts for current user")
-	public ResponseEntity<List<AccountOutputDto>> getAllAccount(Authentication authentication) {
+	public ResponseEntity<Page<AccountOutputDto>> getAllAccount(Authentication authentication,
+																@RequestParam(required = false) Integer size,
+																@RequestParam(required = false) Integer page,
+																@RequestParam(required = false) String sort) {
 		log.debug("REST request to get all Account for User Email: {}", authentication.getName());
 		try {
-			List<AccountOutputDto> accountOutputDtos = accountService.getAllAccount(authentication.getName());
+			PageRequest pageRequest = PageRequestBuilder.getPageRequest(size, page, sort);
+			Page<AccountOutputDto> accountOutputDtos = accountService.getAllAccount(authentication.getName(), pageRequest);
 			return success(accountOutputDtos);
 		} catch (Exception e) {
 			return failure(e);

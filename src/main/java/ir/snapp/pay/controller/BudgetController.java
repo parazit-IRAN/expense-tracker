@@ -7,9 +7,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import ir.snapp.pay.constant.Constants;
 import ir.snapp.pay.dto.BudgetInputDto;
 import ir.snapp.pay.dto.BudgetOutputDto;
+import ir.snapp.pay.filter.PageRequestBuilder;
 import ir.snapp.pay.service.BudgetService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -70,10 +73,14 @@ public class BudgetController extends BaseController {
 	@GetMapping(value = "/all")
 	@PreAuthorize("hasAuthority(\"" + Constants.USER + "\")")
 	@Operation(summary = "get all budget for current user")
-	public ResponseEntity<List<BudgetOutputDto>> getAllBudget(Authentication authentication) {
+	public ResponseEntity<Page<BudgetOutputDto>> getAllBudget(Authentication authentication,
+															  @RequestParam(required = false) Integer size,
+															  @RequestParam(required = false) Integer page,
+															  @RequestParam(required = false) String sort) {
 		log.debug("REST request to get all Budget for User Email: {}", authentication.getName());
 		try {
-			List<BudgetOutputDto> budgetOutputDtos = budgetService.getAllBudget(authentication.getName());
+			PageRequest pageRequest = PageRequestBuilder.getPageRequest(size, page, sort);
+			Page<BudgetOutputDto> budgetOutputDtos = budgetService.getAllBudget(authentication.getName(), pageRequest);
 			return success(budgetOutputDtos);
 		} catch (Exception e) {
 			return failure(e);

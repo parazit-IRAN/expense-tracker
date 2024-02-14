@@ -12,6 +12,9 @@ import ir.snapp.pay.repository.UserRepository;
 import ir.snapp.pay.service.mapper.AccountMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,11 +57,14 @@ public class AccountService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<AccountOutputDto> getAllAccount(String userEmail) {
+	public Page<AccountOutputDto> getAllAccount(String userEmail, PageRequest pageRequest) {
 		User currentUser = userRepository.findOneByEmailIgnoreCase(userEmail)
 				.orElseThrow(new ExpenseException(ExpenseExceptionType.USER_NOT_FOUND_EXCEPTION));
-		List<Account> accounts = accountRepository.findAllByUserId(currentUser.getId());
-		return accountMapper.accountToAccountOutputDto(accounts);
+		Page<Account> accounts = accountRepository.findAllByUserId(currentUser.getId(), pageRequest);
+		return new PageImpl(accountMapper.accountToAccountOutputDto(
+				accounts.getContent()),
+				pageRequest,
+				accounts.getTotalElements());
 	}
 
 	@Transactional(readOnly = true)

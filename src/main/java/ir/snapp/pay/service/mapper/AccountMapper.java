@@ -4,9 +4,11 @@ package ir.snapp.pay.service.mapper;
 import ir.snapp.pay.domain.Account;
 import ir.snapp.pay.dto.AccountInputDto;
 import ir.snapp.pay.dto.AccountOutputDto;
+import ir.snapp.pay.repository.TransactionRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,18 +16,36 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class AccountMapper {
 
-	private final UserMapper userMapper;
-	private final TransactionMapper transactionMapper;
+	private final TransactionRepository transactionRepository;
 
 	public AccountOutputDto accountToAccountOutputDto(Account account) {
+
+		BigDecimal balance = getTotalAmountCalculate(account);
+
 		return AccountOutputDto.builder()
 				.id(account.getId())
 				.name(account.getName())
 				.type(account.getType())
 				.description(account.getDescription())
-				.balance(account.getBalance())
+				.balance(balance)
 				.currency(account.getCurrency())
 				.build();
+	}
+
+	private BigDecimal getTotalAmountCalculate(Account account) {
+		BigDecimal totalExpenseAmount = transactionRepository.sumExpenseTotalAmountByAccountAndUserId(account.getId(), account.getUser().getId());
+		BigDecimal totalIncomeAmount = transactionRepository.sumIncomeTotalAmountByAccountAndUserId(account.getId(), account.getUser().getId());
+
+		if (totalIncomeAmount == null) {
+			totalIncomeAmount = BigDecimal.ZERO;
+		}
+
+		if (totalExpenseAmount == null) {
+			totalExpenseAmount = BigDecimal.ZERO;
+		}
+
+		BigDecimal total = totalIncomeAmount.subtract(totalExpenseAmount);
+		return account.getBalance().subtract(total);
 	}
 
 	public List<AccountOutputDto> accountToAccountOutputDto(List<Account> accounts) {

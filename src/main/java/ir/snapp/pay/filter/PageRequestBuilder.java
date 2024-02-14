@@ -23,9 +23,9 @@ public class PageRequestBuilder {
 		Sort sort = sortingOrders.isEmpty() ? null : Sort.by(sortingOrders);
 
 		if (sort != null) {
-			return PageRequest.of(ObjectUtils.defaultIfNull(pageNumber, 1), ObjectUtils.defaultIfNull(pageSize, 20), sort);
+			return PageRequest.of(ObjectUtils.defaultIfNull(pageNumber, 0), ObjectUtils.defaultIfNull(pageSize, 20), sort);
 		} else {
-			return PageRequest.of(ObjectUtils.defaultIfNull(pageNumber, 1), ObjectUtils.defaultIfNull(pageSize, 20));
+			return PageRequest.of(ObjectUtils.defaultIfNull(pageNumber, 0), ObjectUtils.defaultIfNull(pageSize, 20));
 		}
 	}
 

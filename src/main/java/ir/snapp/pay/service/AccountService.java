@@ -53,4 +53,13 @@ public class AccountService {
 		List<Account> accounts = accountRepository.findAllByUserId(currentUser.getId());
 		return accountMapper.accountToAccountOutputDto(accounts);
 	}
+
+	@Transactional(readOnly = true)
+	public AccountOutputDto getAccount(Long id, String userEmail) {
+		User currentUser = userRepository.findOneByEmailIgnoreCase(userEmail)
+				.orElseThrow(new ExpenseException(ExpenseExceptionType.USER_NOT_FOUND_EXCEPTION));
+		Account account = accountRepository.findByIdAndUserId(id, currentUser.getId())
+				.orElseThrow(new ExpenseException(ExpenseExceptionType.ACCOUNT_NOT_FOUND_EXCEPTION));
+		return accountMapper.accountToAccountOutputDto(account);
+	}
 }

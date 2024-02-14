@@ -70,4 +70,17 @@ public class AccountController extends BaseController {
 		}
 	}
 
+	@GetMapping(value = "/{id}")
+	@PreAuthorize("hasAuthority(\"" + Constants.USER + "\")")
+	@Operation(summary = "get a account by id")
+	public ResponseEntity<AccountOutputDto> getAccount(@PathVariable("id") Long id, Authentication authentication) {
+		log.debug("REST request to get a account id : {}, User Email: {}", id, authentication.getName());
+		try {
+			AccountOutputDto accountOutputDto = accountService.getAccount(id, authentication.getName());
+			return success(accountOutputDto);
+		} catch (Exception e) {
+			return failure(e);
+		}
+	}
+
 }

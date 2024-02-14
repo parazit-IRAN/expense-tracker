@@ -53,7 +53,7 @@
             <column name="date" type="${dateType}"/>
             <column name="amount" type="${bigDecimalType}(10,4)"/>
             <column name="description" type="${stringType}(255)"/>
-            <column name="type" type="${stringType}(255)" >
+            <column name="type" type="${stringType}(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="category_id" type="${longType}">
@@ -114,6 +114,12 @@
                 constraintName="fk_budget_category"
                 referencedTableName="category"
                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="00000000000008" author="Kamali">
+        <addColumn tableName="account">
+            <column name="main" type="${booleanType}"/>
+        </addColumn>
     </changeSet>
 
 </databaseChangeLog>

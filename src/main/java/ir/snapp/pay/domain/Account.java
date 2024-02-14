@@ -42,6 +42,9 @@ public class Account implements Serializable {
 	@Column(name = "balance", scale = 10, precision = 4)
 	private BigDecimal balance;
 
+	@Column(name = "main")
+	private Boolean main = true;
+
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	@ToString.Exclude

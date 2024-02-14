@@ -32,8 +32,15 @@ public class AccountService {
 				.orElseThrow(new ExpenseException(ExpenseExceptionType.USER_NOT_FOUND_EXCEPTION));
 		Account account = accountMapper.accountInputDtoToAccount(accountInputDto);
 		account.setUser(currentUser);
+		isMainChecking(currentUser, account);
 		accountRepository.save(account);
 		return accountMapper.accountToAccountOutputDto(account);
+	}
+
+	private void isMainChecking(User currentUser, Account account) {
+		if (accountRepository.findByMainAndUserId(true, currentUser.getId()).isPresent()) {
+			account.setMain(false);
+		}
 	}
 
 	@Transactional

@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -115,10 +116,10 @@ public class UserController extends BaseController {
 	@SecurityRequirement(name = "Bearer Authentication")
 	@Operation(summary = "update user settings")
 	public ResponseEntity<UserOutputDto> updateUserSettings(@RequestBody UserSettingDto userSettingDto,
-															@Email(message = "email.must.be.valid") @Valid @PathVariable("email") String email) {
-		log.debug("REST request to update User settings by email {} to {}", email, userSettingDto);
+															Authentication authentication) {
+		log.debug("REST request to update User settings by email {} to {}", authentication.getName(), userSettingDto);
 		try {
-			UserOutputDto userOutputDto = userService.updateUserSettings(email, userSettingDto);
+			UserOutputDto userOutputDto = userService.updateUserSettings(authentication.getName(), userSettingDto);
 			return success(userOutputDto);
 		} catch (Exception e) {
 			return failure(e);

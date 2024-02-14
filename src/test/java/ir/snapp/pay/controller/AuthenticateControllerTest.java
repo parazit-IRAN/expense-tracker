@@ -21,7 +21,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @AutoConfigureMockMvc
-@IntegrationTest
 class AuthenticateControllerTest extends AbstractRestControllerTest {
 	@Autowired
 	private PasswordEncoder passwordEncoder;

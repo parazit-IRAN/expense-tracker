@@ -37,5 +37,9 @@ public class Category implements Serializable {
 	@ToString.Exclude
 	private User user;
 
+	@JsonManagedReference
+	@OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE)
+	private List<Budget> budgets = new ArrayList<>();
+
 }
 

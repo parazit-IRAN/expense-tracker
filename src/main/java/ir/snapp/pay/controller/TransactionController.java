@@ -73,4 +73,17 @@ public class TransactionController extends BaseController {
 			return failure(e);
 		}
 	}
+
+	@GetMapping(value = "/{id}")
+	@PreAuthorize("hasAuthority(\"" + Constants.USER + "\")")
+	@Operation(summary = "get a transaction by id")
+	public ResponseEntity<TransactionOutputDto> getTransaction(@PathVariable("id") Long id, Authentication authentication) {
+		log.debug("REST request to get a transaction id : {}, User Email: {}", id, authentication.getName());
+		try {
+			TransactionOutputDto transactionOutputDto = transactionService.getTransaction(id, authentication.getName());
+			return success(transactionOutputDto);
+		} catch (Exception e) {
+			return failure(e);
+		}
+	}
 }

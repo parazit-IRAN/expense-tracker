@@ -92,4 +92,13 @@ public class TransactionService {
 				pageRequest,
 				transactions.getTotalElements());
 	}
+
+	@Transactional(readOnly = true)
+	public TransactionOutputDto getTransaction(Long id, String userEmail) {
+		User currentUser = userRepository.findOneByEmailIgnoreCase(userEmail)
+				.orElseThrow(new ExpenseException(ExpenseExceptionType.USER_NOT_FOUND_EXCEPTION));
+		Transaction transaction = transactionRepository.findByIdAndUserId(id, currentUser.getId())
+				.orElseThrow(new ExpenseException(ExpenseExceptionType.TRANSACTION_NOT_FOUND_EXCEPTION));
+		return transactionMapper.transactionToTransactionOutputDto(transaction);
+	}
 }

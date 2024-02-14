@@ -15,11 +15,13 @@ import ir.snapp.pay.service.mapper.CategoryMapper;
 import ir.snapp.pay.util.GeneralUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.List;
 
 @Slf4j
@@ -61,10 +63,10 @@ public class CategoryService {
 		Category category = categoryRepository.findByNameAndUserId("Salary", currentUser.getId())
 				.orElseThrow(new ExpenseException(ExpenseExceptionType.CATEGORY_NOT_FOUND_EXCEPTION));
 		return categoryRepository.getTransactionSumByCategoryWithoutSalaryCategory(
-						currentUser.getId(),
-						category.getId(),
-						GeneralUtil.convert(startDate),
-						GeneralUtil.convert(endDate));
+				currentUser.getId(),
+				category.getId(),
+				GeneralUtil.convert(startDate),
+				GeneralUtil.convert(endDate));
 	}
 
 	@Transactional(readOnly = true)
@@ -100,10 +102,14 @@ public class CategoryService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<CategoryOutputDto> getAllCategory(String userEmail) {
+	public Page<CategoryOutputDto> getAllCategory(String userEmail, PageRequest pageRequest) {
 		User currentUser = userRepository.findOneByEmailIgnoreCase(userEmail)
 				.orElseThrow(new ExpenseException(ExpenseExceptionType.USER_NOT_FOUND_EXCEPTION));
-		return categoryMapper.categoryToCategoryOutputDto(categoryRepository.findAllByUserId(currentUser.getId()));
+		Page<Category> categories = categoryRepository.findAllByUserId(currentUser.getId(), pageRequest);
+		return new PageImpl(categoryMapper.categoryToCategoryOutputDto(
+				categories.getContent()),
+				pageRequest,
+				categories.getTotalElements());
 	}
 
 	@Transactional(readOnly = true)

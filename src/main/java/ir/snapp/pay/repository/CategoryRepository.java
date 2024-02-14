@@ -1,6 +1,8 @@
 package ir.snapp.pay.repository;
 
 import ir.snapp.pay.domain.Category;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -29,5 +31,5 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
 	Optional<Category> findByIdAndUserId(Long categoryId, Long id);
 
-	List<Category> findAllByUserId(Long userId);
+	Page<Category> findAllByUserId(Long userId, Pageable pageable);
 }

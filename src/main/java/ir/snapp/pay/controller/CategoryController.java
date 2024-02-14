@@ -7,9 +7,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import ir.snapp.pay.constant.Constants;
 import ir.snapp.pay.dto.CategoryInputDto;
 import ir.snapp.pay.dto.CategoryOutputDto;
+import ir.snapp.pay.filter.PageRequestBuilder;
 import ir.snapp.pay.service.CategoryService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -46,10 +49,14 @@ public class CategoryController extends BaseController {
 	@GetMapping(value = "/all")
 	@PreAuthorize("hasAuthority(\"" + Constants.USER + "\")")
 	@Operation(summary = "get all categories for current user")
-	public ResponseEntity<List<CategoryOutputDto>> getAllCategory(Authentication authentication) {
+	public ResponseEntity<Page<CategoryOutputDto>> getAllCategory(Authentication authentication,
+																  @RequestParam(required = false) Integer size,
+																  @RequestParam(required = false) Integer page,
+																  @RequestParam(required = false) String sort) {
 		log.debug("REST request to get all Category , User Email: {}", authentication.getName());
 		try {
-			List<CategoryOutputDto> categories = categoryService.getAllCategory(authentication.getName());
+			PageRequest pageRequest = PageRequestBuilder.getPageRequest(size, page, sort);
+			Page<CategoryOutputDto> categories = categoryService.getAllCategory(authentication.getName(), pageRequest);
 			return success(categories);
 		} catch (Exception e) {
 			return failure(e);

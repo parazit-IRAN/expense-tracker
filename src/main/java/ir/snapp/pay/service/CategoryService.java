@@ -1,6 +1,7 @@
 package ir.snapp.pay.service;
 
 
+import ir.snapp.pay.constant.CategoryConstants;
 import ir.snapp.pay.domain.Category;
 import ir.snapp.pay.domain.User;
 import ir.snapp.pay.dto.CategoryInputDto;
@@ -50,8 +51,15 @@ public class CategoryService {
 				.orElseThrow(new ExpenseException(ExpenseExceptionType.USER_NOT_FOUND_EXCEPTION));
 		Category category = categoryRepository.findByIdAndUserId(categoryId, currentUser.getId())
 				.orElseThrow(new ExpenseException(ExpenseExceptionType.CATEGORY_NOT_FOUND_EXCEPTION));
+		isDeletable(category);
 		categoryRepository.delete(category);
 		log.debug("Deleted An Category: {}", category);
+	}
+
+	private void isDeletable(Category category) {
+		if (category.getName().equals(CategoryConstants.SALARY.getName())) {
+			throw new ExpenseException(ExpenseExceptionType.CATEGORY_IS_NOT_DELETABLE_EXCEPTION);
+		}
 	}
 
 	@Transactional(readOnly = true)
@@ -60,7 +68,7 @@ public class CategoryService {
 																				   LocalDate endDate) {
 		User currentUser = userRepository.findOneByEmailIgnoreCase(userEmail)
 				.orElseThrow(new ExpenseException(ExpenseExceptionType.USER_NOT_FOUND_EXCEPTION));
-		Category category = categoryRepository.findByNameAndUserId("Salary", currentUser.getId())
+		Category category = categoryRepository.findByNameAndUserId(CategoryConstants.SALARY.getName(), currentUser.getId())
 				.orElseThrow(new ExpenseException(ExpenseExceptionType.CATEGORY_NOT_FOUND_EXCEPTION));
 		return categoryRepository.getTransactionSumByCategoryWithoutSalaryCategory(
 				currentUser.getId(),

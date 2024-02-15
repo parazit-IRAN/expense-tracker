@@ -1,6 +1,7 @@
 package ir.snapp.pay.service;
 
 
+import ir.snapp.pay.constant.CategoryConstants;
 import ir.snapp.pay.constant.TransactionType;
 import ir.snapp.pay.domain.Budget;
 import ir.snapp.pay.domain.Category;
@@ -65,7 +66,7 @@ public class TransactionService {
 	}
 
 	private void isValidTransaction(Transaction transaction, User user) {
-		Category category = categoryRepository.findByNameAndUserId("Salary", user.getId())
+		Category category = categoryRepository.findByNameAndUserId(CategoryConstants.SALARY.getName(), user.getId())
 				.orElseThrow(new ExpenseException(ExpenseExceptionType.CATEGORY_NOT_FOUND_EXCEPTION));
 		if ((transaction.getType() == TransactionType.EXPENSE && transaction.getCategory().getId().equals(category.getId())) ||
 				(transaction.getType() == TransactionType.INCOME && !transaction.getCategory().getId().equals(category.getId()))) {

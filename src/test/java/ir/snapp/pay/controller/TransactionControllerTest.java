@@ -1,6 +1,7 @@
 package ir.snapp.pay.controller;
 
 import ir.snapp.pay.constant.AccountType;
+import ir.snapp.pay.constant.CategoryConstants;
 import ir.snapp.pay.constant.Constants;
 import ir.snapp.pay.constant.TransactionType;
 import ir.snapp.pay.domain.*;
@@ -53,7 +54,7 @@ class TransactionControllerTest extends AbstractRestControllerTest {
 		dbTestUtils.cleanAllTables();
 		user = createUser();
 		account = createAccount(user);
-		createCategory("Salary", user);
+		createCategory(CategoryConstants.SALARY.getName(), user);
 		category = createCategory("Transport", user);
 	}
 

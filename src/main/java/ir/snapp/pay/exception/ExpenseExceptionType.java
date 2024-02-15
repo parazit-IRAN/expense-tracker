@@ -24,7 +24,8 @@ public enum ExpenseExceptionType {
 	TRANSACTION_NOT_FOUND_EXCEPTION(12, "transaction.not.found"),
 	TRANSACTION_IS_NOT_VALID_EXCEPTION(13, "transaction.is.not.valid"),
 	ACCOUNT_TYPE_NOT_FOUND_EXCEPTION(14, "accountType.not.found"),
-	BUDGET_NOT_FOUND_EXCEPTION(15, "budget.not.found");
+	BUDGET_NOT_FOUND_EXCEPTION(15, "budget.not.found"),
+	CATEGORY_IS_NOT_DELETABLE_EXCEPTION(16, "category.is.not.deletable");
 
 	private int errorCode;
 	private String errorMessage;

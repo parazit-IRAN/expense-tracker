@@ -43,9 +43,11 @@ public class AccountMapper {
 		if (totalExpenseAmount == null) {
 			totalExpenseAmount = BigDecimal.ZERO;
 		}
+		BigDecimal balance = account.getBalance();
 
-		BigDecimal total = totalIncomeAmount.subtract(totalExpenseAmount);
-		return account.getBalance().subtract(total);
+		balance = balance.subtract(totalExpenseAmount);
+		balance = balance.add(totalIncomeAmount);
+		return balance;
 	}
 
 	public List<AccountOutputDto> accountToAccountOutputDto(List<Account> accounts) {

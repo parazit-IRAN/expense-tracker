@@ -67,7 +67,8 @@ public class TransactionService {
 	private void isValidTransaction(Transaction transaction, User user) {
 		Category category = categoryRepository.findByNameAndUserId("Salary", user.getId())
 				.orElseThrow(new ExpenseException(ExpenseExceptionType.CATEGORY_NOT_FOUND_EXCEPTION));
-		if (transaction.getType().equals(TransactionType.EXPENSE) && transaction.getCategory().getId().equals(category.getId())) {
+		if ((transaction.getType() == TransactionType.EXPENSE && transaction.getCategory().getId().equals(category.getId())) ||
+				(transaction.getType() == TransactionType.INCOME && !transaction.getCategory().getId().equals(category.getId()))) {
 			throw new ExpenseException(ExpenseExceptionType.TRANSACTION_IS_NOT_VALID_EXCEPTION);
 		}
 	}

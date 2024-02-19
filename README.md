@@ -44,7 +44,7 @@ This command will download dependencies and start the application.
 
 You can find the IP address of the application using the following command:
 
-$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' app)
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' app
 
 
 ### 8. Access Swagger UI
